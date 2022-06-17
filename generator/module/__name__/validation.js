@@ -29,9 +29,7 @@ class __name__Validation {
      * @memberof UserValidation
      */
      get__name__(id) {
-      const schema = Joi.object().keys({
-          id: Joi.string().required(),
-      });
+      const schema = Joi.string().required();
 
       return schema.validate(id);
   }

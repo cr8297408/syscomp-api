@@ -1,5 +1,5 @@
 const { DataTypes, Model, UUIDV4} = require('sequelize');
-const db = require('../../config/connection/connectBD');
+const db = require('../../config/connection/connectBd');
 sequelize = db.sequelize;
 
 const __name__ = sequelize.define('__name__', {
@@ -15,9 +15,11 @@ const __name__ = sequelize.define('__name__', {
   },
   description: {
     type: DataTypes.STRING,
-    defaultValue: UUIDV4,
     allowNull: false,
   },
+},{
+  tableName: __name__s,
+  timestamps: true
 })
 
 module.exports = __name__;
