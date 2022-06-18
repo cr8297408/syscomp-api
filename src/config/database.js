@@ -1,11 +1,13 @@
+const config = require('./env')
+
 module.exports = {
   development: {
-    username: 'coder0806',
-    password: 'C11A22R33P44CY',
-    database: 'conexionPos',
-    host: '127.0.0.1',
-    port: 3306,
-    dialect: 'mysql',
+    username: config.DB_USER,
+    password: config.DB_PASS,
+    database: config.DB_NAME,
+    host: config.DB_HOST,
+    port: config.DB_PORT,
+    dialect: config.DB_DIALECT,
     dialectOptions: {
       bigNumberStrings: true
     }

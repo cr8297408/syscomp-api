@@ -5,14 +5,27 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "generate": "node ./generator/generate.js"
+    "generate": "node ./generator/generate.js",
+    "migrate": "npx sequelize db:migrate",
+    "desmigrate": "npx sequelize db:migrate:undo:all",
+    "seeders": "npx sequelize db:seed:all",
+    "deseeds": "npx sequelize db:seed:undo:all"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "express-favicon": "^2.0.1",
+    "express-jwt": "^7.7.5",
     "generate-template-files": "^3.2.0",
+    "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.5",
     "sequelize": "^6.20.1",
+    "sequelize-cli": "^6.4.1",
+    "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.4.0"
   }
 }

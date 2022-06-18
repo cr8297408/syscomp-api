@@ -1,44 +1,44 @@
 const { Router } = require('express');
-const { __name__Component } = require('../components');
+const { NodeComponent } = require('../components');
 
 const router = Router();
 
 /**
  * @swagger
- *  /v1/__name__s:
+ *  /v1/Nodes:
  *      get:
- *          summary: get all the __name__s;
- *          tags: ["__name__s"]
+ *          summary: get all the Nodes;
+ *          tags: ["Nodes"]
  *          responses:
  *              200:
- *                  description: get __name__s successfully 
+ *                  description: get Nodes successfully 
  *                  content:
  *                      application/json:
  *                          squema:
  *                              type: array
  *                              items:
- *                                  $ref: '#/components/schemas/__name__s'
+ *                                  $ref: '#/components/schemas/node'
  *              401:
- *                  description: error in get __name__s
+ *                  description: error in get Nodes
  */
- router.get('/', __name__Component.findAll)
+ router.get('/', NodeComponent.findAll)
 
  /**
   * @swagger
-  *  /v1/__name__s/{id}:
+  *  /v1/Nodes/{id}:
   *      get:
-  *          summary: get one __name__ by id
-  *          tags: ["__name__s"]
+  *          summary: get one Node by id
+  *          tags: ["Nodes"]
   *          responses:
   *              200:
-  *                  description: get __name__ succefully  
+  *                  description: get Node succefully  
   *              401:
-  *                  description: user not authorized to get __name__
+  *                  description: user not authorized to get Node
   *          parameters: [
   *           {
   *              name: id,
   *              in: path,
-  *              description: id of the __name__,
+  *              description: id of the Node,
   *              required: true,
   *              schema: {
   *                  type: string
@@ -47,24 +47,24 @@ const router = Router();
   *          ]
   */
  
- router.get('/:id', __name__Component.findOne);
+ router.get('/:id', NodeComponent.findOne);
  
  /**
   * @swagger
-  *  /v1/__name__s/{id}:
+  *  /v1/Nodes/{id}:
   *      delete:
-  *          summary: delete a __name__
-  *          tags: ["__name__s"]
+  *          summary: delete a Node
+  *          tags: ["Nodes"]
   *          responses:
   *              200:
-  *                  description: __name__ deleted succesfully
+  *                  description: Node deleted succesfully
   *              401:
-  *                  description: user not authorized to delete __name__s
+  *                  description: user not authorized to delete Nodes
   *          parameters: [
   *           {
   *              name: id,
   *              in: path,
-  *              description: id of the __name__,
+  *              description: id of the Node,
   *              required: true,
   *              schema: {
   *                  type: string,
@@ -72,30 +72,30 @@ const router = Router();
   *           },
   *          ]
   */
- router.delete('/:id', __name__Component.deleteOne);
+ router.delete('/:id', NodeComponent.deleteOne);
  
  /**
   * @swagger
-  *  /v1/__name__s/{id}:
+  *  /v1/Nodes/{id}:
   *      put:
-  *          summary: put __name__ in the DB
-  *          tags: ["__name__s"]
+  *          summary: put Node in the DB
+  *          tags: ["Nodes"]
   *          requestBody:
   *              required: true
   *              content:
   *                  application/json:
   *                      schema:
-  *                           $ref: '#/components/schemas/__name__s'
+  *                           $ref: '#/components/schemas/node'
   *          responses:
   *              200:
-  *                  description: update __name__ successfully
+  *                  description: update Node successfully
   *              401:
-  *                  description: user not authorized to update __name__s
+  *                  description: user not authorized to update Nodes
   *          parameters: [
   *           {
   *              name: id,
   *              in: path,
-  *              description: id of the __name__,
+  *              description: id of the Node,
   *              required: true,
   *              schema: {
   *                  type: string,
@@ -104,46 +104,57 @@ const router = Router();
   *          ]
   */
  
- router.put('/:id', __name__Component.updateOne);
+ router.put('/:id', NodeComponent.updateOne);
  
  /**
   * @swagger
-  *  /v1/__name__s:
+  *  /v1/Nodes:
   *      post:
-  *          summary: added a __name__
-  *          tags: ["__name__s"]
+  *          summary: added a Node
+  *          tags: ["Nodes"]
   *          requestBody:
   *              required: true
   *              content:
   *                  application/json:
   *                      schema:
-  *                          $ref: '#/components/schemas/__name__s'
+  *                          $ref: '#/components/schemas/node'
   *          responses:
   *              200:
-  *                  description: __name__ add successfully
+  *                  description: Node add successfully
   *              401:
-  *                  description: user not authorized to add __name__s
+  *                  description: user not authorized to add Nodes
   */
- router.post('/', __name__Component.create)
+ router.post('/', NodeComponent.create)
  
  /**
   * @swagger
   * tags:
-  *  name: __name__s
-  *  description: endpoints for managing api __name__s.
+  *  name: Nodes
+  *  description: endpoints for managing api Nodes.
   * components:
   *  schemas:
-  *      __name__s:
+  *      node:
   *          type: object
   *          required:
-  *              -name
+  *              -finishDate
+  *              -price
+  *              -debit
   *          properties:
-  *              id:
-  *                  type: string
-  *              name:
-  *                  type: string,
+  *              CostCenterId
+  *              serial
+  *              initDate
+  *              finishDate
+  *              price
+  *              debit
+  *              isLifetime
+  *              isActive
   *          example:
-  *              name: unit prueba
+  *              CostCenterId: idcost
+  *              initDate: "2022-06-13"
+  *              finishDate: "2023-06-13"
+  *              price: 300000
+  *              debit: 300000
+  *              isLifetime: false
   *      Error:    
   *          type: object
   *          required:
