@@ -3,7 +3,9 @@ const UserComponent = require('../shared/modules/user');
 const AuthComponent = require('../shared/modules/auth');
 const CostCenterComponent = require('./cost-center');
 const NodeComponent = require('./node');
-
+const LicenseComponent = require('./license');
+const FactureComponent = require('./facture');
+const PaymentComponent = require('./payment')
 
 
 module.exports = {
@@ -11,5 +13,8 @@ module.exports = {
   UserComponent,
   AuthComponent,
   CostCenterComponent,
-  NodeComponent
+  NodeComponent,
+  LicenseComponent,
+  FactureComponent,
+  PaymentComponent
 }

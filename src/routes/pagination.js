@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { 
-  ClientComponent, UserComponent, CostCenterComponent, NodeComponent
+  ClientComponent, UserComponent, CostCenterComponent, NodeComponent, FactureComponent, LicenseComponent
 } = require('../components');
 
 const router = Router();
@@ -157,6 +157,82 @@ router.post('/users', UserComponent.findpagination);
 */
 router.post('/nodes', NodeComponent.findpagination)
  
+/**
+* @swagger
+*  /v1/pagination/licenses?:
+*      post:
+*          summary: get licenses paginated
+*          tags: ["Pagination"]
+*          requestBody:
+*              required: true
+*              content:
+*                  application/json:
+*                      schema:
+*                          $ref: '#/components/schemas/licenseP'
+*          responses:
+*              200:
+*                  description: get tax succefully  
+*              401:
+*                  description: tax not authorized to get tax
+*          parameters: [
+*           {
+*              name: size,
+*              in: query,
+*              description: size to pagination,
+*              schema: {
+*                  type: string
+*              }
+*           },
+*           {
+*              name: page,
+*              in: query,
+*              description: number of page paginate,
+*              schema: {
+*                  type: string
+*              }
+*           },
+*          ]
+*/
+router.post('/licenses', LicenseComponent.findpagination)
+
+/**
+* @swagger
+*  /v1/pagination/factures?:
+*      post:
+*          summary: get factures paginated
+*          tags: ["Pagination"]
+*          requestBody:
+*              required: true
+*              content:
+*                  application/json:
+*                      schema:
+*                          $ref: '#/components/schemas/factureP'
+*          responses:
+*              200:
+*                  description: get tax succefully  
+*              401:
+*                  description: tax not authorized to get tax
+*          parameters: [
+*           {
+*              name: size,
+*              in: query,
+*              description: size to pagination,
+*              schema: {
+*                  type: string
+*              }
+*           },
+*           {
+*              name: page,
+*              in: query,
+*              description: number of page paginate,
+*              schema: {
+*                  type: string
+*              }
+*           },
+*          ]
+*/
+router.post('/nodes', FactureComponent.findpagination)
+
  /**
   * @swagger
   * tags:
@@ -188,6 +264,18 @@ router.post('/nodes', NodeComponent.findpagination)
   *              -where
   *          example:
   *              where: debit>0
+  *      licenseP:
+  *          type: string
+  *          required:
+  *              -where
+  *          example:
+  *              where: type=CLIENT
+  *      factureP:
+  *          type: string
+  *          required:
+  *              -where
+  *          example:
+  *              where: state=IN_DEBT
   *      Error:    
   *          type: object
   *          required:

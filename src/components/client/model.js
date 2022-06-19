@@ -1,5 +1,7 @@
 const { DataTypes, Model, UUIDV4} = require('sequelize');
 const db = require('../../config/connection/connectBd');
+const Facture = require('../facture/model');
+const License = require('../license/model');
 sequelize = db.sequelize;
 
 const Client = sequelize.define('Client', {
@@ -55,5 +57,13 @@ const Client = sequelize.define('Client', {
   tableName: "clients",
   timestamps: true
 })
+
+Client.hasMany(Facture, {
+  foreignKey: 'ClientId'
+});
+
+Client.hasMany(License, {
+  foreignKey: 'ClientId'
+});
 
 module.exports = Client;

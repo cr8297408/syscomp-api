@@ -11,6 +11,16 @@ module.exports = {
         primaryKey: true,
         allowNull: false,
       },
+      LicenseId: {
+        type: Sequelize.DataTypes.STRING,
+        foreignkey: true,
+        references: {
+          model: 'licenses',
+          key: 'id'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      },
       serial: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,

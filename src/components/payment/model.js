@@ -2,24 +2,31 @@ const { DataTypes, UUIDV4} = require('sequelize');
 const db = require('../../config/connection/connectBd');
 sequelize = db.sequelize;
 
-const __name__ = sequelize.define('__name__', {
+const Payment = sequelize.define('Payment', {
   id: {
     type: DataTypes.STRING,
     defaultValue: UUIDV4,
     primaryKey: true,
     allowNull: false,
   },
-  name: {
+  observations: {
     type: DataTypes.STRING,
+  },
+  amount: {
+    type: DataTypes.FLOAT,
     allowNull: false,
   },
-  description: {
-    type: DataTypes.STRING,
+  date: {
+    type: DataTypes.DATE,
     allowNull: false,
   },
+  checked: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  }
 },{
-  tableName: __name__s,
+  tableName: 'payments',
   timestamps: true
 })
 
-module.exports = __name__;
+module.exports = Payment;
