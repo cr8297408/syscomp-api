@@ -5,7 +5,7 @@ const port = server.get('port');
 
 async function dbConnection(){
   try {
-      await db.sequelize.sync()
+      await db.sequelize.sync({force: true})
       console.log('Database connect');
       server.listen(port, () => {
           console.log('APP LISTENING IN PORT: ',port);
