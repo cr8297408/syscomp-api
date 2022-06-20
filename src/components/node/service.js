@@ -49,11 +49,9 @@ const NodeService = {
           throw new Error(validate.error)
         }
 
-        const costCenterNode = await CostCenter.findOne({
-          where: {
-            id: body.CostCenterId,
-          }
-        });
+        const costCenterNode = await CostCenter.findByPk(body.CostCenterId);
+
+        const LicenseCostCenter = await License.findByPk(costCenterNode.LicenseId);
         
         if (!costCenterNode) {
           throw new error('referencia con centro de costo invalida...')
@@ -76,6 +74,11 @@ const NodeService = {
         },
           {where: {id: createNode.id}}
         )
+        const priceAct = await License.update({
+          price: body.price+LicenseCostCenter.price
+        }, {
+          where: {id: costCenterNode.LicenseId}
+        })
         return serialUpdate;
       } 
       return {

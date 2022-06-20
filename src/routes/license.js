@@ -137,13 +137,15 @@ const router = Router();
   *          type: object
   *          required:
   *              -expired_date
-  *              -CientId
+  *              -ClientId
   *          properties:
   *              serial:
   *                 type: string
   *              type: 
   *                 type: string
   *              description:
+  *                 type: string
+  *              ClientId:
   *                 type: string
   *              start_date:
   *                 type: date
@@ -155,6 +157,7 @@ const router = Router();
   *                 type: boolea
   *          example:
   *              type: CLIENT
+  *              ClientId: idcliente
   *              description: licencia prueba
   *              start_date: "2022-06-15"
   *              expired_date: "2024-05-29"

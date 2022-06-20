@@ -1,4 +1,4 @@
-const { DataTypes, Model, UUIDV4} = require('sequelize');
+const { DataTypes, UUIDV4} = require('sequelize');
 const db = require('../../config/connection/connectBd');
 const CostCenter = require('../cost-center/model');
 const Facture = require('../facture/model');
@@ -25,6 +25,10 @@ const License = sequelize.define('License', {
   start_date: {
     type: DataTypes.DATE,
     defaultValue: new Date()
+  },
+  price: {
+    type: DataTypes.FLOAT,
+    allowNull: false
   },
   expired_date: {
     type: DataTypes.STRING,

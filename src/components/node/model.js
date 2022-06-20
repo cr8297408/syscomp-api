@@ -26,10 +26,6 @@ const Node = sequelize.define('Node', {
     type: DataTypes.NUMBER,
     allowNull: false
   },
-  debit: {
-    type: DataTypes.NUMBER,
-    allowNull: false
-  },
   isLifetime: {
     type: DataTypes.BOOLEAN,
     defaultValue: false

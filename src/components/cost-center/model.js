@@ -29,10 +29,6 @@ const CostCenter = sequelize.define('CostCenter', {
     type: DataTypes.NUMBER,
     allowNull: false
   },
-  debit: {
-    type: DataTypes.NUMBER,
-    allowNull: false
-  },
   direction: {
     type: DataTypes.STRING,
     allowNull: false,

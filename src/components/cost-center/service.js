@@ -1,9 +1,11 @@
 const db = require('../../config/connection/connectBd');
 const CostCenterValidation = require('./validation');
 const CostCenter = require('./model');
+const License = require('../license/model');
 const Pagination = require('../../shared/middlewares/pagination')
 const permissions = require('../../shared/middlewares/permissions');
 const { UUIDV4 } = require('sequelize');
+const Node = require('../node/model');
 
 sequelize = db.sequelize;
 
@@ -47,9 +49,26 @@ const CostCenterService = {
         if (validate.error) {
           throw new Error(validate.error)
         }
+
+        const LicenseCostCenter = await License.findByPk(body.LicenseId);
+
+        if (!LicenseCostCenter) {
+          throw new Error('licencia invalida...')
+        }
+
+        const CostCentersLicense = await CostCenter.findOne({
+          where: {
+            LicenseId: LicenseCostCenter.id
+          }
+        })
+
+
+        if (LicenseCostCenter.type == 'CLIENT' && CostCentersLicense) {
+          throw new Error('tu licencia es tipo servidor por ende solo puede tener un centro de costo.')
+        }
   
         const createCostCenter = await CostCenter.create({
-          // cocatenar serial de licencia con id cost-center
+          LicenseId: body.LicenseId,
           name: body.name,
           initDate: body.initDate ,
           finishDate: body.finishDate ,
@@ -60,7 +79,19 @@ const CostCenterService = {
           isLifetime: body.isLifetime ,
           isActive: body.isActive ,
         });
-        return createCostCenter;
+        let serialChil = LicenseCostCenter.serial+'_'+createCostCenter.serial;
+        const serialUpdate = await CostCenter.update({
+          serial: serialChil
+        },
+          {where: {id: createCostCenter.id}}
+        )
+
+        await License.update({
+          price: body.price+LicenseCostCenter.price
+        }, {
+          where: {id: body.LicenseId}
+        })
+        return serialUpdate;
       } 
       return {
         message: 'no tienes permisos para esta acción',

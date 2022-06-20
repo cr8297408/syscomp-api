@@ -166,8 +166,10 @@ const router = Router();
   *              -price
   *              -debit
   *              -direction
+  *              -LicenseId
   *          properties:
   *              serial
+  *              LicenseId
   *              name
   *              initDate
   *              finishDate
@@ -179,6 +181,7 @@ const router = Router();
   *              isActive
   *          example:
   *              name: pereira center
+  *              LicenseId: idlicense
   *              finishDate: "2023-06-18"
   *              price: 800000
   *              debit: 800000

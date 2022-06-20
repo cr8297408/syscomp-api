@@ -16,6 +16,7 @@ class LicenseValidation {
 
     createLicense(body){
       const schema = Joi.object().keys({
+        ClientId: Joi.string().required(),
         type: Joi.string(),
         description: Joi.string(),
         start_date: Joi.date(),

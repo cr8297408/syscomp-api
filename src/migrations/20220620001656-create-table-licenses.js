@@ -15,6 +15,10 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         defaultValue: UUIDV4,
       },
+      price: {
+        type: DataTypes.FLOAT,
+        allowNull: false
+      },
       type: {
         type: Sequelize.DataTypes.ENUM('SERVER', 'CLIENT', 'MASTER'),
         default: 'SERVER'

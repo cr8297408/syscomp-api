@@ -35,10 +35,6 @@ module.exports = {
         type: Sequelize.DataTypes.FLOAT,
         allowNull: false
       },
-      debit: {
-        type: Sequelize.DataTypes.FLOAT,
-        allowNull: false
-      },
       isLifetime: {
         type: Sequelize.DataTypes.BOOLEAN,
         defaultValue: false

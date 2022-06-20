@@ -41,10 +41,6 @@ module.exports = {
         type: Sequelize.DataTypes.FLOAT,
         allowNull: false
       },
-      debit: {
-        type: Sequelize.DataTypes.FLOAT,
-        allowNull: false
-      },
       direction: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,

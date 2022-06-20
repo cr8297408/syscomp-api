@@ -17,6 +17,7 @@ class CostCenterValidation {
     createCostCenter(body){
       const schema = Joi.object().keys({
         name: Joi.string().required(),
+        LicenseId: Joi.string().required(),
         initDate: Joi.string(),
         finishDate: Joi.string().required(),
         price: Joi.number().required(),

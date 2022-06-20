@@ -173,8 +173,8 @@ const router = Router();
   *          example:
   *              businessName: business1
   *              nit: bussinessnit1
-  *              repLegalContact: 3333333
-  *              phoneNumber: 3123456789
+  *              repLegalContact: "3333333"
+  *              phoneNumber: "3123456789"
   *              direction: direccion negocio1
   *              municipality: dosquebradas
   *              department: risaralda
