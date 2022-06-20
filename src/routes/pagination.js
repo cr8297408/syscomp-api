@@ -1,6 +1,12 @@
 const { Router } = require('express');
 const { 
-  ClientComponent, UserComponent, CostCenterComponent, NodeComponent, FactureComponent, LicenseComponent
+  ClientComponent, 
+  UserComponent, 
+  CostCenterComponent, 
+  NodeComponent, 
+  FactureComponent, 
+  LicenseComponent, 
+  PaymentComponent
 } = require('../components');
 
 const router = Router();
@@ -231,7 +237,45 @@ router.post('/licenses', LicenseComponent.findpagination)
 *           },
 *          ]
 */
-router.post('/nodes', FactureComponent.findpagination)
+router.post('/nodes', FactureComponent.findpagination);
+
+/**
+* @swagger
+*  /v1/pagination/paymentss?:
+*      post:
+*          summary: get paymentss paginated
+*          tags: ["Pagination"]
+*          requestBody:
+*              required: true
+*              content:
+*                  application/json:
+*                      schema:
+*                          $ref: '#/components/schemas/paymentsP'
+*          responses:
+*              200:
+*                  description: get tax succefully  
+*              401:
+*                  description: tax not authorized to get tax
+*          parameters: [
+*           {
+*              name: size,
+*              in: query,
+*              description: size to pagination,
+*              schema: {
+*                  type: string
+*              }
+*           },
+*           {
+*              name: page,
+*              in: query,
+*              description: number of page paginate,
+*              schema: {
+*                  type: string
+*              }
+*           },
+*          ]
+*/
+router.post('/payments', PaymentComponent.findpagination)
 
  /**
   * @swagger
@@ -276,6 +320,12 @@ router.post('/nodes', FactureComponent.findpagination)
   *              -where
   *          example:
   *              where: state=IN_DEBT
+  *      paymentsP:
+  *          type: string
+  *          required:
+  *              -where
+  *          example:
+  *              where: checked=false
   *      Error:    
   *          type: object
   *          required:
