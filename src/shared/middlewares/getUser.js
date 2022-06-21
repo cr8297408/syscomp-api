@@ -9,7 +9,6 @@ async function getUser(bearerHeader){
   if (token) {
       const decoded = await jwt.verify(token, config.JWT_SECRET);
       if (decoded) {
-        console.log(decoded)
         const user = await User.findByPk(decoded.dataToken.id)
         return user
       }
