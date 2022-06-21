@@ -202,7 +202,7 @@ const NodeService = {
     } catch (error) {
         throw new Error(error.message);
     }
-  },
+  }
 }
 
 module.exports = NodeService;

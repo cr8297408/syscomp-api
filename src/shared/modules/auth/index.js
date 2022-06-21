@@ -47,9 +47,20 @@ async function newPassword(req, res) {
   }
 }
 
+async function getUserAuth(req, res){
+  try {
+    const userLog = await AuthService.getUserLog(req.headers['authorization']) 
+
+    res.json(userLog)
+  } catch(error) {
+    throw new Error(error.message)
+  }
+}
+
 module.exports = {
   signIn,
   changePassword,
   forgotPassword,
-  newPassword
+  newPassword,
+  getUserAuth
 }

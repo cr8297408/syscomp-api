@@ -52,7 +52,7 @@ const router = Router();
   */
  
  router.get('/:id', UserComponent.findOne);
- 
+
  /**
   * @swagger
   *  /v1/users/{id}:

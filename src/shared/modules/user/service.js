@@ -11,7 +11,6 @@ const permissions = require('../../middlewares/permissions');
 const sendMail = require('../../resources/send-mail');
 const getUser = require('../../middlewares/getUser');
 const s3 = require('../../../config/bucket');
-const uploadFiles = require('../../../config/bucket');
 
 sequelize = db.sequelize;
 

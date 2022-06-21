@@ -121,8 +121,6 @@ const AuthService = {
   async newPassword(newPassword, bearerHeader){
     try {
       const user = await getUser(bearerHeader);
-      console.log(user.dataValues.id);
-      console.log(newPassword);
       
       let newpass = bcrypt.hashSync(newPassword, 10)
       const changePassword = await User.update({
@@ -133,6 +131,18 @@ const AuthService = {
 
       return changePassword;
       
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  },
+  
+  async getUserLog(bearerHeader){
+    try {
+      const user = await getUser(bearerHeader);
+      if (!user) {
+        throw new Error('token invalido...')
+      }
+      return user;
     } catch (error) {
       throw new Error(error.message)
     }

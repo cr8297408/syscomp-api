@@ -81,7 +81,6 @@ async function putAvatar(req, res) {
   }
 }
 
-
 module.exports = {
   findAll,
   create,
@@ -90,5 +89,5 @@ module.exports = {
   updateOne,
   findpagination,
   activateUser,
-  putAvatar
+  putAvatar,
 }

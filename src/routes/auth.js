@@ -26,6 +26,21 @@ const router = Router();
 
  /**
   * @swagger
+  *  /v1/auth/getUser:
+  *      get:
+  *          summary: get one user by header
+  *          tags: ["Auths"]
+  *          responses:
+  *              200:
+  *                  description: get user succefully  
+  *              401:
+  *                  description: invalid token
+  */
+ 
+  router.get('/getUser', AuthComponent.getUserAuth);
+
+ /**
+  * @swagger
   *  /v1/auth/changePassword:
   *      post:
   *          summary: change password users
