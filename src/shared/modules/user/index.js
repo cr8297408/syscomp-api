@@ -71,6 +71,16 @@ async function findpagination(req, res){
   }
 }
 
+async function putAvatar(req, res) {
+  try {
+    const {originalname, path} = req.file;
+    const avatar = await UserService.putAvatar(req.headers['authorization'], originalname, path)
+    res.json(avatar)
+  } catch (error) {
+    res.json(error.message)
+  }
+}
+
 
 module.exports = {
   findAll,
@@ -79,5 +89,6 @@ module.exports = {
   deleteOne,
   updateOne,
   findpagination,
-  activateUser
+  activateUser,
+  putAvatar
 }

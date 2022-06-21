@@ -1,13 +1,17 @@
+const bcrypt = require('bcrypt');
+const fs = require('fs');
+const { Op } = require("sequelize");
 const User = require('./model');
 const db = require('../../../config/connection/connectBD');
 const UserValidation = require('./validation');
 const Pagination = require('../../middlewares/pagination');
 const {TemplateSign} = require('../../resources/getTemplate');
 const config = require('../../../config/env');
-const { Op } = require("sequelize");
 const permissions = require('../../middlewares/permissions');
 const sendMail = require('../../resources/send-mail');
-const bcrypt = require('bcrypt');
+const getUser = require('../../middlewares/getUser');
+const s3 = require('../../../config/bucket');
+const uploadFiles = require('../../../config/bucket');
 
 sequelize = db.sequelize;
 
@@ -257,6 +261,39 @@ const UserService = {
     }
   },
 
+  async putAvatar(bearerHeader, originalname, path){
+    try {
+      const user = await getUser(bearerHeader);
+      if (!user) {
+        throw new Error('token invalido...')
+      }
+      const bodyFile = fs.createReadStream(path);
+      const paramsSnap = {
+          Bucket: config.AWS_BUCKET,
+          Key: originalname,
+          Body: bodyFile,
+          ContentType: 'image/png',
+          ACL: 'public-read',//TODO 😎
+      };
+      s3.upload(paramsSnap, async function (err, data) {
+        if (err) {
+            throw new Error('error in callback',err)
+        }
+        return data
+      });
+      const avatar = `${config.AWS_URL}/${originalname}` 
+      const userModif = await User.update({
+        avatarFile: avatar
+      }, {
+        where: {id:user.id}
+      })
+
+      return userModif
+      
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
 }
 
 module.exports = UserService;

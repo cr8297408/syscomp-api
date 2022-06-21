@@ -1,5 +1,7 @@
 const { Router } = require('express');
 const { UserComponent } = require('../components');
+const upload = require('../config/multer');
+
 
 
 const router = Router();
@@ -153,7 +155,25 @@ const router = Router();
   */
  router.post('/', UserComponent.create)
 
-
+ /**
+  * @swagger
+  *  /v1/users/putAvatar:
+  *      post:
+  *          summary: put avatar
+  *          tags: ["users"]
+  *          requestBody:
+  *              required: true
+  *              content:
+  *                  application/json:
+  *                      schema:
+  *                          $ref: '#/components/schemas/putAvatarS'
+  *          responses:
+  *              200:
+  *                  description: user add successfully
+  *              401:
+  *                  descripion: user not authorized to add users
+  */
+  router.post('/putAvatar', upload.single('avatarFile') ,UserComponent.putAvatar);
 
  /**
   * @swagger
@@ -195,6 +215,13 @@ const router = Router();
   *              roles: {}
   *              profile: {}
   *              avatarFile: avaatarlink
+  *      putAvatarS:
+  *          type: object
+  *          required:
+  *              -avatarFile
+  *          properties:
+  *              avatarFile:
+  *                     type: file  
   *      Error:    
   *          type: object
   *          required:
