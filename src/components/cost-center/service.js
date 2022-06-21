@@ -86,11 +86,6 @@ const CostCenterService = {
           {where: {id: createCostCenter.id}}
         )
 
-        await License.update({
-          price: body.price+LicenseCostCenter.price
-        }, {
-          where: {id: body.LicenseId}
-        })
         return serialUpdate;
       } 
       return {
