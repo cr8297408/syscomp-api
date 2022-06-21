@@ -2,9 +2,9 @@ const db = require('../../config/connection/connectBd');
 const NodeValidation = require('./validation');
 const Node = require('./model');
 const CostCenter = require('../cost-center/model');
+const License = require('../license/model');
 const Pagination = require('../../shared/middlewares/pagination')
 const permissions = require('../../shared/middlewares/permissions');
-const { UUIDV4 } = require('sequelize');
 
 sequelize = db.sequelize;
 
@@ -66,6 +66,7 @@ const NodeService = {
             debit: body.debit ,
             isLifetime: body.isLifetime ,
             isActive: body.isActive ,
+            CostCenterId: body.CostCenterId, 
           }
         );
         let serialChil = costCenterNode.serial+'_'+createNode.serial;

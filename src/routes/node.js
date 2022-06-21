@@ -138,14 +138,12 @@ const router = Router();
   *          required:
   *              -finishDate
   *              -price
-  *              -debit
   *          properties:
   *              CostCenterId
   *              serial
   *              initDate
   *              finishDate
   *              price
-  *              debit
   *              isLifetime
   *              isActive
   *          example:
@@ -153,7 +151,6 @@ const router = Router();
   *              initDate: "2022-06-13"
   *              finishDate: "2023-06-13"
   *              price: 300000
-  *              debit: 300000
   *              isLifetime: false
   *      Error:    
   *          type: object

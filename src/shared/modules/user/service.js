@@ -1,10 +1,13 @@
 const User = require('./model');
 const db = require('../../../config/connection/connectBD');
 const UserValidation = require('./validation');
-const Pagination = require('../../middlewares/pagination')
+const Pagination = require('../../middlewares/pagination');
+const {TemplateSign} = require('../../resources/getTemplate');
+const config = require('../../../config/env');
 const { Op } = require("sequelize");
-const permissions = require('../../middlewares/permissions')
-const bcrypt = require('bcrypt')
+const permissions = require('../../middlewares/permissions');
+const sendMail = require('../../resources/send-mail');
+const bcrypt = require('bcrypt');
 
 sequelize = db.sequelize;
 
@@ -77,6 +80,16 @@ const UserService = {
           avatarFile: body.avatarFile,
           typeUser: body.typeUser
         });
+
+        let verificateUser = 'https://google.com'
+        let contactLink = config.CONTACT_LINK;
+
+        const emailFrom = config.MAIL_USER;
+        const emailTo = body.email;
+        const subject = 'Registro en Pos API'
+        const textPrincipal = `te has registrado correctamete a conexion Pos, porfavor verifica tu cuenta en el siguiente link...`
+        const html = TemplateSign(textPrincipal, body.username, verificateUser, contactLink)
+        await sendMail('syscomp', emailFrom, emailTo, subject,html)
         return createdUser;
       } 
       return {

@@ -60,7 +60,7 @@ router.post('/clients', ClientComponent.findpagination)
 *              content:
 *                  application/json:
 *                      schema:
-*                          $ref: '#/components/schemas/tax'
+*                          $ref: '#/components/schemas/userp'
 *          responses:
 *              200:
 *                  description: get tax succefully  

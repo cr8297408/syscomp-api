@@ -63,7 +63,7 @@ const CostCenterService = {
         })
 
 
-        if (LicenseCostCenter.type == 'CLIENT' && CostCentersLicense) {
+        if (LicenseCostCenter.type == 'SERVER' && CostCentersLicense) {
           throw new Error('tu licencia es tipo servidor por ende solo puede tener un centro de costo.')
         }
   

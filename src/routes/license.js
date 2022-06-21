@@ -161,6 +161,7 @@ const router = Router();
   *              description: licencia prueba
   *              start_date: "2022-06-15"
   *              expired_date: "2024-05-29"
+  *              price: 300000
   *              isActive: false
   *              isLifetime: false 
   *      Error:    

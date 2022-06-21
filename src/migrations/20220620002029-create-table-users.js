@@ -35,7 +35,7 @@ module.exports = {
       profile: Sequelize.DataTypes.JSON,
       isActive:  {
         type: Sequelize.DataTypes.BOOLEAN,
-        defaultValue: true
+        defaultValue: false
       },
       typeUser: {
         type: Sequelize.DataTypes.STRING,

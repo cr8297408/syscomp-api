@@ -23,6 +23,7 @@ class LicenseValidation {
         expired_date: Joi.date().required(),
         isActive: Joi.boolean(),
         isLifetime: Joi.boolean(),
+        price: Joi.number()
       })
 
       return schema.validate(body)

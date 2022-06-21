@@ -20,7 +20,6 @@ class NodeValidation {
         initDate: Joi.string(),
         finishDate: Joi.string().required(),
         price: Joi.number().required(),
-        debit: Joi.number().required(),
         isLifetime: Joi.boolean(),
         isActive: Joi.boolean()
       })

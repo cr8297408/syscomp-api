@@ -21,7 +21,6 @@ class CostCenterValidation {
         initDate: Joi.string(),
         finishDate: Joi.string().required(),
         price: Joi.number().required(),
-        debit: Joi.number().required(),
         direction: Joi.string().required(),
         nodes: Joi.object(),
         isLifetime: Joi.boolean(),

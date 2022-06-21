@@ -174,7 +174,6 @@ const router = Router();
   *              initDate
   *              finishDate
   *              price
-  *              debit
   *              direction
   *              nodes
   *              isLifetime
@@ -183,8 +182,6 @@ const router = Router();
   *              name: pereira center
   *              LicenseId: idlicense
   *              finishDate: "2023-06-18"
-  *              price: 800000
-  *              debit: 800000
   *              direction: 'cr8 #14-b'
   *      Error:    
   *          type: object

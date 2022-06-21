@@ -24,6 +24,66 @@ const router = Router();
   */
   router.post('/signIn', AuthComponent.signIn)
 
+ /**
+  * @swagger
+  *  /v1/auth/changePassword:
+  *      post:
+  *          summary: change password users
+  *          tags: ["Auths"]
+  *          requestBody:
+  *              required: true
+  *              content:
+  *                  application/json:
+  *                      schema:
+  *                          $ref: '#/components/schemas/changePass'
+  *          responses:
+  *              200:
+  *                  description: change password succesfully
+  *              401:
+  *                  description: user exists
+  */
+  router.post('/changePassword', AuthComponent.changePassword)
+
+ /**
+  * @swagger
+  *  /v1/auth/forgotPassword:
+  *      post:
+  *          summary: forgot password users
+  *          tags: ["Auths"]
+  *          requestBody:
+  *              required: true
+  *              content:
+  *                  application/json:
+  *                      schema:
+  *                          $ref: '#/components/schemas/forgotPass'
+  *          responses:
+  *              200:
+  *                  description: forgot password succesfully
+  *              401:
+  *                  description: user exists
+  */
+  router.post('/forgotPassword', AuthComponent.forgotPassword)
+
+   /**
+  * @swagger
+  *  /v1/auth/newPassword:
+  *      post:
+  *          summary: new password users
+  *          tags: ["Auths"]
+  *          requestBody:
+  *              required: true
+  *              content:
+  *                  application/json:
+  *                      schema:
+  *                          $ref: '#/components/schemas/newPass'
+  *          responses:
+  *              200:
+  *                  description: new password succesfully
+  *              401:
+  *                  description: user exists
+  */
+  router.post('/newPassword', AuthComponent.newPassword)
+
 
  /**
   * @swagger
@@ -68,6 +128,40 @@ const router = Router();
   *          example:
   *              email: admin1@mail.com
   *              password: Admin1
+  *      changePass:
+  *          type: object
+  *          required:
+  *              -email
+  *              -oldPassword
+  *              -newPassword
+  *          properties:
+  *              oldPassword:
+  *                  type: string
+  *              newPassword:
+  *                  type: string
+  *              email:
+  *                  type: string
+  *          example:
+  *              email: admin1@mail.com
+  *              password: Admin1
+  *      forgotPass:
+  *          type: object
+  *          required:
+  *              -email
+  *          properties:
+  *              email:
+  *                  type: string
+  *          example:
+  *              email: admin1@mail.com
+  *      newPass:
+  *          type: object
+  *          required:
+  *              -newPassword
+  *          properties:
+  *              newPassword:
+  *                  type: string
+  *          example:
+  *              newPassword: pass1234
   *      Error:    
   *          type: object
   *          required:
