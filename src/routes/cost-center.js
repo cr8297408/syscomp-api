@@ -183,6 +183,7 @@ const router = Router();
   *              LicenseId: idlicense
   *              finishDate: "2023-06-18"
   *              direction: 'cr8 #14-b'
+  *              price: 300000
   *      Error:    
   *          type: object
   *          required:

@@ -14,6 +14,9 @@ const Node = sequelize.define('Node', {
     type: DataTypes.STRING,
     defaultValue: UUIDV4
   },
+  serialCost: {
+    type: DataTypes.STRING,
+  },
   initDate: {
     type: DataTypes.DATE,
     defaultValue: new Date()

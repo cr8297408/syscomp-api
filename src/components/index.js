@@ -5,7 +5,8 @@ const CostCenterComponent = require('./cost-center');
 const NodeComponent = require('./node');
 const LicenseComponent = require('./license');
 const FactureComponent = require('./facture');
-const PaymentComponent = require('./payment')
+const PaymentComponent = require('./payment');
+const ItemComponent = require('./item');
 
 
 module.exports = {
@@ -16,5 +17,6 @@ module.exports = {
   NodeComponent,
   LicenseComponent,
   FactureComponent,
-  PaymentComponent
+  PaymentComponent,
+  ItemComponent
 }

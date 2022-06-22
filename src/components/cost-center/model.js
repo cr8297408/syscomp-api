@@ -13,6 +13,9 @@ const CostCenter = sequelize.define('CostCenter', {
     type: DataTypes.STRING,
     defaultValue: UUIDV4
   },
+  serial_license: {
+    type: DataTypes.STRING,
+  },
   name: {
     type: DataTypes.STRING,
     allowNull: false,

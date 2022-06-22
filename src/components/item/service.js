@@ -1,29 +1,27 @@
 const db = require('../../config/connection/connectBd');
-const NodeValidation = require('./validation');
-const Node = require('./model');
-const CostCenter = require('../cost-center/model');
-const License = require('../license/model');
+const ItemValidation = require('./validation');
+const Item = require('./model');
 const Pagination = require('../../shared/middlewares/pagination')
-const permissions = require('../../shared/middlewares/permissions');
+const permissions = require('../../shared/middlewares/permissions')
 
 sequelize = db.sequelize;
 
 /**
  * @exports
- * @implements {Node} model
+ * @implements {Item} model
  */
-const NodeService = {
+const ItemService = {
   /**
    * @exports
-   * @implements {Node} model
-   * @description get all Nodes 
+   * @implements {Item} model
+   * @description get all Items 
    */
   async findAll(bearerHeader){
     try {
       const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
       if (validatePermission) {
-        const Nodes = await Node.findAll()
-        return Nodes;
+        const Items = await Item.findAll()
+        return Items;
       } 
       return {
         message: 'no tienes permisos para esta acción',
@@ -38,41 +36,19 @@ const NodeService = {
   /**
    * @exports
    * @param {*} body
-   * @implements {Node} model 
+   * @implements {Item} model 
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
+      const validatePermission = await permissions(bearerHeader, 'CREATE')
       if (validatePermission) {
-        const validate = NodeValidation.createNode(body);
+        const validate = ItemValidation.createItem(body);
         if (validate.error) {
           throw new Error(validate.error)
         }
-
-        const costCenterNode = await CostCenter.findByPk(body.CostCenterId);
-
-        const LicenseCostCenter = await License.findByPk(costCenterNode.LicenseId);
-        
-        if (!costCenterNode) {
-          throw new error('referencia con centro de costo invalida...')
-        }
-        
-
-        const createNode = await Node.create(
-          {
-            initDate: body.initDate ,
-            serialCost: costCenterNode.serial,
-            finishDate: body.finishDate ,
-            price: body.price ,
-            debit: body.debit ,
-            isLifetime: body.isLifetime ,
-            isActive: body.isActive ,
-            CostCenterId: body.CostCenterId, 
-          }
-        );
-        
-
-        return createNode;
+  
+        const createItem = await Item.create(body);
+        return createItem;
       } 
       return {
         message: 'no tienes permisos para esta acción',
@@ -86,19 +62,19 @@ const NodeService = {
 
   /**
    * @exports
-   * @implements {Node} model
+   * @implements {Item} model
    */
 
   async findOne(bearerHeader, id){
     try {
       const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
       if (validatePermission) {
-        const validate = NodeValidation.getNode(id);
+        const validate = ItemValidation.getItem(id);
         if (validate.error) {
           throw new Error(validate.error)
         }
-        const getNode = await Node.findByPk(id)
-        return getNode;
+        const getItem = await Item.findByPk(id)
+        return getItem;
       } 
       return {
         message: 'no tienes permisos para esta acción',
@@ -111,23 +87,23 @@ const NodeService = {
   /**
    * @exports
    * @param {*} id
-   * @implements {Node} model
+   * @implements {Item} model
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
+      const validatePermission = await permissions(bearerHeader, 'DELETE')
       if (validatePermission) {
-        const validate = await NodeValidation.getNode(id)
+        const validate = await ItemValidation.getItem(id)
 
         if (validate.error) {
           throw new Error(validate.error)
         }
 
-        const getNode = await Node.findByPk(id);
+        const getItem = await Item.findByPk(id);
         
-        await getNode.destroy()
+        await getItem.destroy()
 
-        return getNode;
+        return getItem;
         
       } 
       return {
@@ -143,36 +119,34 @@ const NodeService = {
    * @exports
    * @param {*} id 
    * @param {*} body 
-   * @description update a Node in the db
+   * @description update a Item in the db
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
+      const validatePermission = await permissions(bearerHeader, 'UPDATE')
       if (validatePermission) {
         
-        const validateid = await NodeValidation.getNode(id);
+        const validateid = await ItemValidation.getItem(id);
         
         if (validateid.error) {
           throw new Error(validate.error)
         }
   
-        const validateBody = await NodeValidation.createNode(body)
+        const validateBody = await ItemValidation.createItem(body)
         if (validateBody.error) {
           throw new Error(validate.error)
         }
-        const newNode = await Node.update(
+        const newItem = await Item.update(
           {
-            initDate: body.initDate ,
-            finishDate: body.finishDate ,
-            price: body.price ,
-            debit: body.debit ,
-            isLifetime: body.isLifetime ,
-            isActive: body.isActive ,
+            sum: body.sum,
+            amount: body.amount,
+            description: body.description,
+            FactureId: body.FactureId
           },
           {where: {id}}
         )
   
-        return newNode;
+        return newItem;
         
       } 
       return {
@@ -188,8 +162,8 @@ const NodeService = {
     try {
       const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
       if (validatePermission) {
-        const Nodes = await Pagination('Nodes',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return Nodes
+        const Items = await Pagination('Items',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        return Items
       } 
       return {
         message: 'no tienes permisos para esta acción',
@@ -198,7 +172,7 @@ const NodeService = {
     } catch (error) {
         throw new Error(error.message);
     }
-  }
+  },
 }
 
-module.exports = NodeService;
+module.exports = ItemService;

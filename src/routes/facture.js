@@ -170,7 +170,7 @@ const router = Router();
   *              limitDate: "2022-07-17"
   *              rememberDate: "2022-06-25"
   *              paidOut: false
-  *              estate: IN_DEBTS
+  *              estate: IN_DEBT
   *      Error:    
   *          type: object
   *          required:

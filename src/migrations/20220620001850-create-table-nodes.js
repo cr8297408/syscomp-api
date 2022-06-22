@@ -23,6 +23,9 @@ module.exports = {
       serial: {
         type: Sequelize.DataTypes.STRING,
       },
+      serialCost: {
+        type: DataTypes.STRING,
+      },
       initDate: {
         type: Sequelize.DataTypes.DATE,
         defaultValue: new Date()

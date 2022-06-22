@@ -25,6 +25,9 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
+      serial_license: {
+        type: DataTypes.STRING,
+      },
       name: {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,

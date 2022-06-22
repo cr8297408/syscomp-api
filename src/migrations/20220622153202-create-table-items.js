@@ -1,16 +1,16 @@
 'use strict';
-const {DataTypes, UUIDV4} = require('sequelize')
+const { DataTypes, UUIDV4 } = require('sequelize')
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('items', {
       id: {
         type: DataTypes.STRING,
         defaultValue: UUIDV4,
         primaryKey: true,
         allowNull: false,
       },
-      observations: {
+      sum: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -18,23 +18,12 @@ module.exports = {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
-      date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      checked: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
+      description: {
+        type: DataTypes.STRING,
       },
       FactureId: {
         type: DataTypes.STRING,
-        foreignkey: true,
-        references: {
-          model: 'factures',
-          key: 'id'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        allowNull: false,
       },
       createdAt: {
         type: DataTypes.STRING,
@@ -48,6 +37,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('items');
   }
 };

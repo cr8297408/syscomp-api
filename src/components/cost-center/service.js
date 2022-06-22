@@ -69,6 +69,7 @@ const CostCenterService = {
   
         const createCostCenter = await CostCenter.create({
           LicenseId: body.LicenseId,
+          serial_license: LicenseCostCenter.serial,
           name: body.name,
           initDate: body.initDate ,
           finishDate: body.finishDate ,
@@ -79,14 +80,8 @@ const CostCenterService = {
           isLifetime: body.isLifetime ,
           isActive: body.isActive ,
         });
-        let serialChil = LicenseCostCenter.serial+'_'+createCostCenter.serial;
-        const serialUpdate = await CostCenter.update({
-          serial: serialChil
-        },
-          {where: {id: createCostCenter.id}}
-        )
 
-        return serialUpdate;
+        return createCostCenter;
       } 
       return {
         message: 'no tienes permisos para esta acción',

@@ -6,7 +6,8 @@ const {
   NodeComponent, 
   FactureComponent, 
   LicenseComponent, 
-  PaymentComponent
+  PaymentComponent,
+  ItemComponent
 } = require('../components');
 
 const router = Router();
@@ -277,6 +278,44 @@ router.post('/nodes', FactureComponent.findpagination);
 */
 router.post('/payments', PaymentComponent.findpagination)
 
+/**
+* @swagger
+*  /v1/pagination/items?:
+*      post:
+*          summary: get items paginated
+*          tags: ["Pagination"]
+*          requestBody:
+*              required: true
+*              content:
+*                  application/json:
+*                      schema:
+*                          $ref: '#/components/schemas/itemsP'
+*          responses:
+*              200:
+*                  description: get tax succefully  
+*              401:
+*                  description: tax not authorized to get tax
+*          parameters: [
+*           {
+*              name: size,
+*              in: query,
+*              description: size to pagination,
+*              schema: {
+*                  type: string
+*              }
+*           },
+*           {
+*              name: page,
+*              in: query,
+*              description: number of page paginate,
+*              schema: {
+*                  type: string
+*              }
+*           },
+*          ]
+*/
+router.post('/items', ItemComponent.findpagination)
+
  /**
   * @swagger
   * tags:
@@ -326,6 +365,12 @@ router.post('/payments', PaymentComponent.findpagination)
   *              -where
   *          example:
   *              where: checked=false
+  *      paymentsP:
+  *          type: string
+  *          required:
+  *              -where
+  *          example:
+  *              where: FactureId=idfactura
   *      Error:    
   *          type: object
   *          required:

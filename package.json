@@ -8,6 +8,7 @@
     "generate": "node ./generator/generate.js",
     "migrate": "npx sequelize db:migrate",
     "desmigrate": "npx sequelize db:migrate:undo:all",
+    "desmigrateOne": "npx sequelize db:migrate:undo --name",
     "seeders": "npx sequelize db:seed:all",
     "deseeds": "npx sequelize db:seed:undo:all"
   },
