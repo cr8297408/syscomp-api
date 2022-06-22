@@ -10,6 +10,7 @@ const FactureRouter = require('./facture');
 const LicenseRouter = require('./license');
 const PaymentRouter = require('./payment');
 const ItemRouter = require('./item');
+const EventRouter = require('./event');
 
 
 router.use('/v1/clients', ClientRouter);
@@ -22,5 +23,6 @@ router.use('/v1/factures', FactureRouter);
 router.use('/v1/licenses', LicenseRouter);
 router.use('/v1/payments', PaymentRouter);
 router.use('/v1/items', ItemRouter);
+router.use('/v1/events', EventRouter);
 
 module.exports = router;

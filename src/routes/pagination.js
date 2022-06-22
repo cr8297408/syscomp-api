@@ -7,7 +7,8 @@ const {
   FactureComponent, 
   LicenseComponent, 
   PaymentComponent,
-  ItemComponent
+  ItemComponent,
+  EventComponent
 } = require('../components');
 
 const router = Router();
@@ -23,12 +24,12 @@ const router = Router();
 *              content:
 *                  application/json:
 *                      schema:
-*                          $ref: '#/components/schemas/tax'
+*                          $ref: '#/components/schemas/clientP'
 *          responses:
 *              200:
-*                  description: get tax succefully  
+*                  description: get clients succefully  
 *              401:
-*                  description: tax not authorized to get tax
+*                  description: clients not authorized to get clients
 *          parameters: [
 *           {
 *              name: size,
@@ -64,9 +65,9 @@ router.post('/clients', ClientComponent.findpagination)
 *                          $ref: '#/components/schemas/userp'
 *          responses:
 *              200:
-*                  description: get tax succefully  
+*                  description: get users succefully  
 *              401:
-*                  description: tax not authorized to get tax
+*                  description: users not authorized to get users
 *          parameters: [
 *           {
 *              name: size,
@@ -102,9 +103,9 @@ router.post('/users', UserComponent.findpagination);
 *                          $ref: '#/components/schemas/costCenterP'
 *          responses:
 *              200:
-*                  description: get tax succefully  
+*                  description: get cost centers succefully  
 *              401:
-*                  description: tax not authorized to get tax
+*                  description: cost centers not authorized to get cost centers
 *          parameters: [
 *           {
 *              name: size,
@@ -140,9 +141,9 @@ router.post('/users', UserComponent.findpagination);
 *                          $ref: '#/components/schemas/nodeP'
 *          responses:
 *              200:
-*                  description: get tax succefully  
+*                  description: get nodes succefully  
 *              401:
-*                  description: tax not authorized to get tax
+*                  description: nodes not authorized to get nodes
 *          parameters: [
 *           {
 *              name: size,
@@ -178,9 +179,9 @@ router.post('/nodes', NodeComponent.findpagination)
 *                          $ref: '#/components/schemas/licenseP'
 *          responses:
 *              200:
-*                  description: get tax succefully  
+*                  description: get license succefully  
 *              401:
-*                  description: tax not authorized to get tax
+*                  description: license not authorized to get license
 *          parameters: [
 *           {
 *              name: size,
@@ -213,12 +214,12 @@ router.post('/licenses', LicenseComponent.findpagination)
 *              content:
 *                  application/json:
 *                      schema:
-*                          $ref: '#/components/schemas/factureP'
+*                          $ref: '#/components/schemas/facturesP'
 *          responses:
 *              200:
-*                  description: get tax succefully  
+*                  description: get factures succefully  
 *              401:
-*                  description: tax not authorized to get tax
+*                  description: factures not authorized to get factures
 *          parameters: [
 *           {
 *              name: size,
@@ -254,9 +255,9 @@ router.post('/nodes', FactureComponent.findpagination);
 *                          $ref: '#/components/schemas/paymentsP'
 *          responses:
 *              200:
-*                  description: get tax succefully  
+*                  description: get payments succefully  
 *              401:
-*                  description: tax not authorized to get tax
+*                  description: payments not authorized to get payments
 *          parameters: [
 *           {
 *              name: size,
@@ -292,9 +293,9 @@ router.post('/payments', PaymentComponent.findpagination)
 *                          $ref: '#/components/schemas/itemsP'
 *          responses:
 *              200:
-*                  description: get tax succefully  
+*                  description: get items succefully  
 *              401:
-*                  description: tax not authorized to get tax
+*                  description: items not authorized to get items
 *          parameters: [
 *           {
 *              name: size,
@@ -315,6 +316,44 @@ router.post('/payments', PaymentComponent.findpagination)
 *          ]
 */
 router.post('/items', ItemComponent.findpagination)
+
+/**
+* @swagger
+*  /v1/pagination/events?:
+*      post:
+*          summary: get events paginated
+*          tags: ["Pagination"]
+*          requestBody:
+*              required: true
+*              content:
+*                  application/json:
+*                      schema:
+*                          $ref: '#/components/schemas/eventsP'
+*          responses:
+*              200:
+*                  description: get event succefully  
+*              401:
+*                  description: event not authorized to get event
+*          parameters: [
+*           {
+*              name: size,
+*              in: query,
+*              description: size to pagination,
+*              schema: {
+*                  type: string
+*              }
+*           },
+*           {
+*              name: page,
+*              in: query,
+*              description: number of page paginate,
+*              schema: {
+*                  type: string
+*              }
+*           },
+*          ]
+*/
+router.post('/events', EventComponent.findpagination)
 
  /**
   * @swagger
@@ -353,7 +392,7 @@ router.post('/items', ItemComponent.findpagination)
   *              -where
   *          example:
   *              where: type=CLIENT
-  *      factureP:
+  *      facturesP:
   *          type: string
   *          required:
   *              -where
@@ -365,12 +404,18 @@ router.post('/items', ItemComponent.findpagination)
   *              -where
   *          example:
   *              where: checked=false
-  *      paymentsP:
+  *      itemsP:
   *          type: string
   *          required:
   *              -where
   *          example:
   *              where: FactureId=idfactura
+  *      eventsP:
+  *          type: string
+  *          required:
+  *              -where
+  *          example:
+  *              where: state=ACTIVE
   *      Error:    
   *          type: object
   *          required:
