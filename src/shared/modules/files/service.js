@@ -16,9 +16,14 @@ const FileService = {
         if (err) {
             throw new Error('error in callback',err)
         }
-        return data
+        // delete file in the server
+        await fs.unlink(`./uploads/${originalname}`,function(err){
+          if(err) return console.log(err);
+          console.log('file deleted successfully');
+        });
       });
       const avatar = `${config.AWS_URL}/${originalname}`
+      
 
       return avatar;
   }
