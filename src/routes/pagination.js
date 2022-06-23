@@ -8,7 +8,8 @@ const {
   LicenseComponent, 
   PaymentComponent,
   ItemComponent,
-  EventComponent
+  EventComponent,
+  ReportTypeComponent
 } = require('../components');
 
 const router = Router();
@@ -316,6 +317,21 @@ router.post('/payments', PaymentComponent.findpagination)
 *          ]
 */
 router.post('/items', ItemComponent.findpagination)
+
+/**
+* @swagger
+*  /v1/pagination/reportTypes?:
+*      get:
+*          summary: get reportTypes paginated
+*          tags: ["Pagination"]
+*          responses:
+*              200:
+*                  description: get reportTypes succefully  
+*              401:
+*                  description: reportTypes not authorized to get reportTypes
+*/
+router.get('/reportTypes', ReportTypeComponent.findpagination)
+
 
 /**
 * @swagger

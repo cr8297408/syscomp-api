@@ -1,33 +1,25 @@
 const { DataTypes, UUIDV4} = require('sequelize');
-const db = require('../../config/connection/connectBd');
-const Facture = require('../facture/model');
+const db = require('../../../config/connection/connectBd');
 sequelize = db.sequelize;
 
-const Item = sequelize.define('Item', {
+const ReportType = sequelize.define('ReportType', {
   id: {
     type: DataTypes.STRING,
     defaultValue: UUIDV4,
     primaryKey: true,
     allowNull: false,
   },
-  sum: {
+  name: {
     type: DataTypes.STRING,
-    allowNull: false,
-  },
-  amount: {
-    type: DataTypes.FLOAT,
     allowNull: false,
   },
   description: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
 },{
-  tableName: 'items',
+  tableName: "reportTypes",
   timestamps: true
 })
 
-Facture.hasMany(Item, {
-  foreignKey: 'FactureId'
-})
-
-module.exports = Item;
+module.exports = ReportType;

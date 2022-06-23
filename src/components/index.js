@@ -8,6 +8,8 @@ const FactureComponent = require('./facture');
 const PaymentComponent = require('./payment');
 const ItemComponent = require('./item');
 const EventComponent = require('../shared/modules/event');
+const ReportTypeComponent = require('../shared/modules/report-type');
+const SupportTicketComponent = require('../shared/modules/support-ticket');
 
 
 module.exports = {
@@ -20,5 +22,7 @@ module.exports = {
   FactureComponent,
   PaymentComponent,
   ItemComponent,
-  EventComponent
+  EventComponent,
+  ReportTypeComponent,
+  SupportTicketComponent
 }
