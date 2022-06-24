@@ -23,6 +23,7 @@ const FileService = {
         });
       });
       const avatar = `${config.AWS_URL}/${originalname}`
+      
 
       return avatar;
   }

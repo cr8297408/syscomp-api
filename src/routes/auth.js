@@ -24,27 +24,6 @@ const router = Router();
   */
   router.post('/signIn', AuthComponent.signIn)
 
-   /**
-  * @swagger
-  *  /v1/auth/signUp:
-  *      post:
-  *          summary: login users
-  *          security: [] # No security
-  *          tags: ["Auths"]
-  *          requestBody:
-  *              required: true
-  *              content:
-  *                  application/json:
-  *                      schema:
-  *                          $ref: '#/components/schemas/login'
-  *          responses:
-  *              200:
-  *                  description: login succesfully
-  *              401:
-  *                  description: user exists
-  */
-    router.post('/signUp', AuthComponent.signUp)
-
  /**
   * @swagger
   *  /v1/auth/getUser:

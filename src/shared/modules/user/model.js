@@ -1,5 +1,6 @@
 const { DataTypes, Model, UUIDV4} = require('sequelize');
 const db = require('../../../config/connection/connectBD');
+const Facture = require('../../../components/facture/model')
 sequelize = db.sequelize;
 
 const User = sequelize.define('User', {
@@ -33,7 +34,7 @@ const User = sequelize.define('User', {
   profile: DataTypes.JSON,
   isActive:  {
     type: DataTypes.BOOLEAN,
-    defaultValue: false
+    defaultValue: true
   },
   typeUser: {
     type: DataTypes.STRING,
@@ -49,5 +50,11 @@ const User = sequelize.define('User', {
   timestamps: true
 })
 
+<<<<<<< HEAD
+=======
+User.hasMany(Facture, {
+  foreignKey: 'UserId'
+});
+>>>>>>> development
 
 module.exports = User;

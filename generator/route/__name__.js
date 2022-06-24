@@ -7,7 +7,11 @@ const router = Router();
  * @swagger
  *  /v1/__name__s:
  *      get:
+<<<<<<< HEAD
  *          summary: det all the __name__s;
+=======
+ *          summary: get all the __name__s;
+>>>>>>> development
  *          tags: ["__name__s"]
  *          responses:
  *              200:

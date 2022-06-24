@@ -10,11 +10,15 @@ const expressJWT = jwt({
     algorithms: [JWT_ALGORITHMS],
 }).unless({
     path: [ 
+<<<<<<< HEAD
         '/v1/auth/signUp',
         '/v1/auth/signIn',
         '/v1/sockets',
         '/favicon.ico',
         '/socket.io/socket.io.js'
+=======
+        '/v1/auth/signIn',
+>>>>>>> development
     ],
 });
 

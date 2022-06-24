@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 const { DataTypes, Model, UUIDV4} = require('sequelize');
+=======
+const { DataTypes, UUIDV4} = require('sequelize');
+>>>>>>> development
 const db = require('../../config/connection/connectBd');
 sequelize = db.sequelize;
 

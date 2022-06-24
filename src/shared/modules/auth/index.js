@@ -1,20 +1,5 @@
 const AuthService = require('./service');
 
-async function signUp(req, res, next) {
-  try {
-    const {
-      email, 
-      username,
-      firstname,
-      password,
-      lastname
-    } = req.body;
-    const Auths = await AuthService.signUp(req.body)
-    res.status(200).json(Auths)
-  } catch (error) {
-    res.json(error.message)
-  }
-}
 
 async function signIn(req, res, next){
   try {
@@ -77,6 +62,10 @@ module.exports = {
   changePassword,
   forgotPassword,
   newPassword,
+<<<<<<< HEAD
   getUserAuth,
   signUp
+=======
+  getUserAuth
+>>>>>>> development
 }

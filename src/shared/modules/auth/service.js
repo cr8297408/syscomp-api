@@ -16,53 +16,6 @@ sequelize = db.sequelize;
  * @implements {Auth} model
  */
 const AuthService = {
-
-  /**
-   * @exports
-   * @param {*} body
-   * @implements {Auth} model 
-   */
-   async signUp(body) {
-    try {
-      const validate = AuthValidation.createAuth(body);
-      if (validate.error) {
-        throw new Error(validate.error)
-      }
-      const validateUser = await User.findOne({
-        where: {username: body.username}
-      });
-      const validateEmail = await User.findOne({
-        where: {email: body.email}
-      });
-      if (validateUser) {
-        throw new Error('el usuario ya está en uso...')
-      }
-      if (validateEmail) {
-        throw new Error('el email ya está en uso...')
-      }
-      const dataUser = {
-        email: body.email,
-        username: body.username,
-        firstName: body.firstName,
-        lastName: body.lastName,
-        password: bcrypt.hashSync(body.password, 10),
-      }
-      const createdAuth = await User.create(dataUser);
-      let verificateUser = 'https://google.com'
-      let contactLink = config.CONTACT_LINK;
-
-      const emailFrom = config.MAIL_USER;
-      const emailTo = body.email;
-      const subject = 'Registro en Pos API'
-      const textPrincipal = `te has registrado correctamete a conexion Pos, porfavor verifica tu cuenta en el siguiente link...`
-      const html = TemplateSign(textPrincipal, body.username, verificateUser, contactLink)
-      await sendMail('syscomp', emailFrom, emailTo, subject,html)
-      return createdAuth;
-
-    } catch (error) {
-      throw new Error(error.message)
-    }
-  },
   
   async signIn(body){
     try {
