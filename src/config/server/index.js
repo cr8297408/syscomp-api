@@ -1,5 +1,5 @@
 const server = require('./server')
-const db = require('../connection/connectBD');
+const db = require('../connection/connectBd');
 
 const port = server.get('port');
 
