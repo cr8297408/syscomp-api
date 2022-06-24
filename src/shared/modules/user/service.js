@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const { Op } = require("sequelize");
 const User = require('./model');
-const db = require('../../../config/connection/connectBD');
+const db = require('../../../config/connection/connectBd');
 const UserValidation = require('./validation');
 const FileService = require('../files/service');
 const Pagination = require('../../middlewares/pagination');
