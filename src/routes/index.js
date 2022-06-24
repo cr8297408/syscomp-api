@@ -13,7 +13,7 @@ const ItemRouter = require('./item');
 const EventRouter = require('./event');
 const ReportTypeRouter = require('./report-type');
 const SupportTicketRouter = require('./support-ticket');
-
+const TicketThreadRouter = require('./ticket-thread');
 
 router.use('/v1/clients', ClientRouter);
 router.use('/v1/users', UserRouter);
@@ -28,5 +28,6 @@ router.use('/v1/items', ItemRouter);
 router.use('/v1/events', EventRouter);
 router.use('/v1/reportTypes', ReportTypeRouter);
 router.use('/v1/supportTickets', SupportTicketRouter);
+router.use('/v1/ticketThreads', TicketThreadRouter)
 
 module.exports = router;

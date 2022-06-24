@@ -10,6 +10,7 @@ const ItemComponent = require('./item');
 const EventComponent = require('../shared/modules/event');
 const ReportTypeComponent = require('../shared/modules/report-type');
 const SupportTicketComponent = require('../shared/modules/support-ticket');
+const TicketThreadComponent = require('../shared/modules/ticket-thread');
 
 
 module.exports = {
@@ -24,5 +25,6 @@ module.exports = {
   ItemComponent,
   EventComponent,
   ReportTypeComponent,
-  SupportTicketComponent
+  SupportTicketComponent,
+  TicketThreadComponent
 }

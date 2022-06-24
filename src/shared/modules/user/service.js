@@ -83,14 +83,13 @@ const UserService = {
           typeUser: body.typeUser
         });
 
-        let verificateUser = 'https://google.com'
         let contactLink = config.CONTACT_LINK;
 
         const emailFrom = config.MAIL_USER;
         const emailTo = body.email;
         const subject = 'Registro en Pos API'
         const textPrincipal = `te has registrado correctamete a conexion Pos, porfavor verifica tu cuenta en el siguiente link...`
-        const html = TemplateSign(textPrincipal, body.username, verificateUser, contactLink)
+        const html = TemplateSign(textPrincipal, body.username, contactLink)
         await sendMail('syscomp', emailFrom, emailTo, subject,html)
         return createdUser;
       } 
