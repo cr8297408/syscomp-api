@@ -14,9 +14,6 @@ const development = {
     MAIL_PORT: process.env.MAIL_PORT,
     MAIL_HOST: process.env.MAIL_HOST,
     MAIL_PASS: process.env.MAIL_PASS,
-<<<<<<< HEAD
-    MAIL_USER: process.env.MAIL_USER
-=======
     MAIL_USER: process.env.MAIL_USER,
     URL_FORGOT_PASS: process.env.URL_FORGOT_PASS,
     CONTACT_LINK: process.env.CONTACT_LINK,
@@ -25,7 +22,6 @@ const development = {
     AWS_REGION: process.env.AWS_REGION,
     AWS_BUCKET: process.env.AWS_BUCKET,
     AWS_URL:process.env.AWS_URL
->>>>>>> development
 }
 
 module.exports = development;

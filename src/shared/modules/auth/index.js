@@ -62,10 +62,5 @@ module.exports = {
   changePassword,
   forgotPassword,
   newPassword,
-<<<<<<< HEAD
-  getUserAuth,
-  signUp
-=======
   getUserAuth
->>>>>>> development
 }

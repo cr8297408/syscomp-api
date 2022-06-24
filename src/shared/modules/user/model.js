@@ -50,11 +50,8 @@ const User = sequelize.define('User', {
   timestamps: true
 })
 
-<<<<<<< HEAD
-=======
 User.hasMany(Facture, {
   foreignKey: 'UserId'
 });
->>>>>>> development
 
 module.exports = User;
