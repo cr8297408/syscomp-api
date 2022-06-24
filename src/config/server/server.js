@@ -4,7 +4,7 @@ const swaggerUI = require('swagger-ui-express')
 const swaggerJsDoc = require('swagger-jsdoc');
 
 const config = require('../env')
-const db = require('../connection/connectBD')
+const db = require('../connection/connectBd')
 const swaggerDoc = require('../swagger/swaggerOptions');
 const expressJWT = require('../JWT');
 
