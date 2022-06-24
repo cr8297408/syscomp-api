@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
     "generate": "node ./generator/generate.js",
     "migrate": "npx sequelize db:migrate",
     "desmigrate": "npx sequelize db:migrate:undo:all",
