@@ -1,5 +1,5 @@
 const { DataTypes, Model, UUIDV4} = require('sequelize');
-const db = require('../../../config/connection/connectBD');
+const db = require('../../../config/connection/connectBd');
 const Facture = require('../../../components/facture/model')
 sequelize = db.sequelize;
 
