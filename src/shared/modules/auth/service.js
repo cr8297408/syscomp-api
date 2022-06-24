@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 
-const db = require('../../../config/connection/connectBD'); 
+const db = require('../../../config/connection/connectBd'); 
 const AuthValidation = require('./validation');
 const User = require('../user/model');
 const config = require('../../../config/env');
