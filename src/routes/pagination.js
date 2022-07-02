@@ -63,7 +63,7 @@ router.post('/clients', ClientComponent.findpagination)
 *              content:
 *                  application/json:
 *                      schema:
-*                          $ref: '#/components/schemas/userp'
+*                          $ref: '#/components/schemas/userP'
 *          responses:
 *              200:
 *                  description: get users succefully  
