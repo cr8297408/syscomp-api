@@ -152,7 +152,7 @@ const router = Router();
   *              FactureId:
   *                  type: string,
   *          example:
-  *              sum: 2
+  *              sum: 3
   *              amount: 1000000
   *              description: dos nodos de 500 en un centro de costo
   *              FactureId: idFactura
