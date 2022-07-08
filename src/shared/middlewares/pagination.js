@@ -5,10 +5,13 @@ async function findPagination(tablename,sequelize, sizeAsNumber,pageAsNumber, wh
         page = pageAsNumber - 1;
     }
 
-    let size = 1;
+    let size = 10;
     if (!Number.isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber <= 10) {
         size = sizeAsNumber;
     }
+    // if (sizeAsNumber > 10 ) {
+    //   size = 10;
+    // }
     const offset = page*size;
     if(wherecond){
       const array = wherecond.split('=')
