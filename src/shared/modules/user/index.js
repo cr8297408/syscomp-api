@@ -14,7 +14,6 @@ async function create(req, res, next){
   try {
     const getUser = await UserService.create(req.headers['authorization'],req.body);
     res.status(201).json(getUser)
-  
   } catch (error) {
     res.json(error.message)
   }

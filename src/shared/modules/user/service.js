@@ -38,7 +38,7 @@ const UserService = {
    * @param {*} body
    * @implements {User} model 
    */
-  async create(bearerHeader,body) {
+   async create(bearerHeader,body) {
     try {
       const validatePermission = await permissions(bearerHeader, ['ALTER_USER', 'CREATE_USER'])
       if (validatePermission) {
@@ -69,6 +69,7 @@ const UserService = {
             message: 'el usuario ya está en uso '
           }
         }
+        const user = await getUser(bearerHeader);
   
         const createdUser = await User.create({
           email: body.email,
@@ -79,16 +80,17 @@ const UserService = {
           roles: body.roles,
           profile: body.profile,
           avatarFile: body.avatarFile,
-          typeUser: body.typeUser
+          typeUser: body.typeUser,
+          // createdBy: user.id
         });
 
         let contactLink = config.CONTACT_LINK;
-
+        let verificateUser = 'https://google.com'
         const emailFrom = config.MAIL_USER;
         const emailTo = body.email;
         const subject = 'Registro en Pos API'
         const textPrincipal = `te has registrado correctamete a conexion Pos, porfavor verifica tu cuenta en el siguiente link...`
-        const html = TemplateSign(textPrincipal, body.username, contactLink)
+        const html = TemplateSign(textPrincipal, body.username, verificateUser, contactLink)
         await sendMail('syscomp', emailFrom, emailTo, subject,html)
         return createdUser;
       } 
@@ -199,10 +201,10 @@ const UserService = {
    * @param {*} body 
    * @description update a User in the db
    */
-  async update(bearerHeader,id, body){
+   async update(bearerHeader,id, body){
     try {
       
-      const validatePermission = await permissions(bearerHeader, ['ALTER_USER', 'UPDATE_USER']);
+      const validatePermission = await permissions(bearerHeader, ['ALTER_USER', 'UPDATE_USER'])
       if (validatePermission) {
         const validateid = await UserValidation.getUser(id);
         
@@ -213,9 +215,12 @@ const UserService = {
         if (validateBody.error) {
           throw new Error(validate.error)
         }
+
+        const user = await getUser(bearerHeader);
         const newUser = await User.update(
           {
             username: body.username,
+            email:body.email,
             firstName: body.firstName,
             lastName: body.lastName,
             roles: body.roles,
@@ -223,6 +228,7 @@ const UserService = {
             isActive: body.isActive,
             isAdmin: body.isAdmin,
             avatarFile: body.avatarFile,
+            updatedBy: user.id
           },
           {where: {id}}
         )
@@ -235,7 +241,7 @@ const UserService = {
       }
 
     } catch (error) {
-      
+      throw new Error(error.message)
     }
   },
 
