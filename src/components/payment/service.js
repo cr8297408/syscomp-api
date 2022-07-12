@@ -18,7 +18,7 @@ const PaymentService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_PAYMENT'])
       if (validatePermission) {
         const Payments = await Payment.findAll()
         return Payments;
@@ -40,7 +40,7 @@ const PaymentService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_PAYMENT'])
       if (validatePermission) {
         const validate = PaymentValidation.createPayment(body);
         if (validate.error) {
@@ -67,7 +67,7 @@ const PaymentService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_PAYMENT'])
       if (validatePermission) {
         const validate = PaymentValidation.getPayment(id);
         if (validate.error) {
@@ -91,7 +91,7 @@ const PaymentService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_PAYMENT'])
       if (validatePermission) {
         const validate = await PaymentValidation.getPayment(id)
 
@@ -123,7 +123,7 @@ const PaymentService = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE_PAYMENT'])
       if (validatePermission) {
         
         const validateid = await PaymentValidation.getPayment(id);
@@ -160,7 +160,7 @@ const PaymentService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_PAYMENT'])
       if (validatePermission) {
         const Payments = await Pagination('Payments',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Payments

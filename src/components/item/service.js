@@ -18,7 +18,7 @@ const ItemService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_ITEM'])
       if (validatePermission) {
         const Items = await Item.findAll()
         return Items;
@@ -40,7 +40,7 @@ const ItemService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_ITEM'])
       if (validatePermission) {
         const validate = ItemValidation.createItem(body);
         if (validate.error) {
@@ -67,7 +67,7 @@ const ItemService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_ITEM'])
       if (validatePermission) {
         const validate = ItemValidation.getItem(id);
         if (validate.error) {
@@ -91,7 +91,7 @@ const ItemService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_ITEM'])
       if (validatePermission) {
         const validate = await ItemValidation.getItem(id)
 
@@ -123,7 +123,7 @@ const ItemService = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE_ITEM'])
       if (validatePermission) {
         
         const validateid = await ItemValidation.getItem(id);
@@ -160,7 +160,7 @@ const ItemService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_ITEM'])
       if (validatePermission) {
         const Items = await Pagination('Items',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Items

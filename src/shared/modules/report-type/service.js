@@ -18,7 +18,7 @@ const ReportTypeService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_REPORT_TYPE'])
       if (validatePermission) {
         const ReportTypes = await ReportType.findAll()
         return ReportTypes;
@@ -40,7 +40,7 @@ const ReportTypeService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_REPORT_TYPE'])
       if (validatePermission) {
         const validate = ReportTypeValidation.createReportType(body);
         if (validate.error) {
@@ -67,7 +67,7 @@ const ReportTypeService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_REPORT_TYPE'])
       if (validatePermission) {
         const validate = ReportTypeValidation.getReportType(id);
         if (validate.error) {
@@ -91,7 +91,7 @@ const ReportTypeService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_REPORT_TYPE'])
       if (validatePermission) {
         const validate = await ReportTypeValidation.getReportType(id)
 
@@ -123,7 +123,7 @@ const ReportTypeService = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE_REPORT_TYPE'])
       if (validatePermission) {
         
         const validateid = await ReportTypeValidation.getReportType(id);
@@ -158,7 +158,7 @@ const ReportTypeService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_REPORT_TYPE'])
       if (validatePermission) {
         const ReportTypes = await Pagination('ReportTypes',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return ReportTypes

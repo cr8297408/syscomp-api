@@ -20,7 +20,8 @@ const EventService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_EVENT']);
+      console.log(validatePermission)
       if (validatePermission) {
         const Events = await Event.findAll()
         return Events;
@@ -42,7 +43,7 @@ const EventService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_EVENT'])
       if (validatePermission) {
         const validate = EventValidation.createEvent(body);
         if (validate.error) {
@@ -69,7 +70,7 @@ const EventService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_EVENT'])
       if (validatePermission) {
         const validate = EventValidation.getEvent(id);
         if (validate.error) {
@@ -93,7 +94,7 @@ const EventService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_EVENT'])
       if (validatePermission) {
         const validate = await EventValidation.getEvent(id)
 
@@ -125,7 +126,7 @@ const EventService = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE_EVENT'])
       if (validatePermission) {
         
         const validateid = await EventValidation.getEvent(id);
@@ -165,7 +166,7 @@ const EventService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_EVENT'])
       if (validatePermission) {
         const Events = await Pagination('Events',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Events
@@ -185,7 +186,7 @@ const EventService = {
       if (validateBody.error) {
         throw new Error(validateBody.error)
       }
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_EVENT'])
       if (validatePermission) {
         try {
           console.log(events.length, users.length);
@@ -217,7 +218,7 @@ const EventService = {
 
   async showParticipants(bearerHeader, EventId){
     try {
-      const validatePermissions = await permissions(bearerHeader, 'FIND_ALL');
+      const validatePermissions = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_EVENT']);
       if(validatePermissions){
          
         const usersR = await EventUser.findAll({

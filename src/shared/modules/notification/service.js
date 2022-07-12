@@ -18,7 +18,7 @@ const NotificationService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_NOTIFICATION'])
       if (validatePermission) {
         const Notifications = await Notification.findAll()
         return Notifications;
@@ -40,7 +40,7 @@ const NotificationService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_NOTIFICATION'])
       if (validatePermission) {
         const validate = NotificationValidation.createNotification(body);
         if (validate.error) {
@@ -67,7 +67,7 @@ const NotificationService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_NOTIFICATION'])
       if (validatePermission) {
         const validate = NotificationValidation.getNotification(id);
         if (validate.error) {
@@ -91,7 +91,7 @@ const NotificationService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_NOTIFICATION'])
       if (validatePermission) {
         const validate = await NotificationValidation.getNotification(id)
 
@@ -117,7 +117,7 @@ const NotificationService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_NOTIFICATION'])
       if (validatePermission) {
         const Notifications = await Pagination('Notifications',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Notifications

@@ -18,7 +18,7 @@ const __name__Service = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL___name__'])
       if (validatePermission) {
         const __name__s = await __name__.findAll()
         return __name__s;
@@ -40,7 +40,7 @@ const __name__Service = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE___name__'])
       if (validatePermission) {
         const validate = __name__Validation.create__name__(body);
         if (validate.error) {
@@ -67,7 +67,7 @@ const __name__Service = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE___name__'])
       if (validatePermission) {
         const validate = __name__Validation.get__name__(id);
         if (validate.error) {
@@ -91,7 +91,7 @@ const __name__Service = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE___name__'])
       if (validatePermission) {
         const validate = await __name__Validation.get__name__(id)
 
@@ -123,7 +123,7 @@ const __name__Service = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE___name__'])
       if (validatePermission) {
         
         const validateid = await __name__Validation.get__name__(id);
@@ -158,7 +158,7 @@ const __name__Service = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION___name__'])
       if (validatePermission) {
         const __name__s = await Pagination('__name__s',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return __name__s

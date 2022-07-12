@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const { Op } = require("sequelize");
 const User = require('./model');
 const db = require('../../../config/connection/connectBd');
 const UserValidation = require('./validation');
@@ -20,7 +19,7 @@ sequelize = db.sequelize;
 const UserService = {
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_USER'])
       if (validatePermission) {
         const Users = await User.findAll()
         return Users;  
@@ -41,7 +40,7 @@ const UserService = {
    */
   async create(bearerHeader,body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
+      const validatePermission = await permissions(bearerHeader, ['ALTER_USER', 'CREATE_USER'])
       if (validatePermission) {
         const validate = UserValidation.createUser(body);
         if (validate.error) {
@@ -110,7 +109,7 @@ const UserService = {
 
    async findOne(bearerHeader,id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_USER'])
       if (validatePermission) {
         const validate = UserValidation.getUser(id);
         if (validate.error) {
@@ -134,7 +133,7 @@ const UserService = {
    */
   async delete(bearerHeader,id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
+      const validatePermission = await permissions(bearerHeader, ['ALTER_USER', 'DELETE_USER'])
       if (validatePermission) {
         const validate = await UserValidation.getUser(id)
   
@@ -169,7 +168,7 @@ const UserService = {
 
   async activateUser(bearerHeader,id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
+      const validatePermission = await permissions(bearerHeader, ['ALTER_USER', 'ACTIVATE_USER']);
       if (validatePermission) {
         const validate = await UserValidation.getUser(id)
   
@@ -203,7 +202,7 @@ const UserService = {
   async update(bearerHeader,id, body){
     try {
       
-      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
+      const validatePermission = await permissions(bearerHeader, ['ALTER_USER', 'UPDATE_USER']);
       if (validatePermission) {
         const validateid = await UserValidation.getUser(id);
         
@@ -217,7 +216,6 @@ const UserService = {
         const newUser = await User.update(
           {
             username: body.username,
-            email:body.email,
             firstName: body.firstName,
             lastName: body.lastName,
             roles: body.roles,
@@ -243,7 +241,7 @@ const UserService = {
 
   async findPagination(bearerHeader,sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_USER'])
       if (validatePermission) {
         const Users = await Pagination('users',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Users

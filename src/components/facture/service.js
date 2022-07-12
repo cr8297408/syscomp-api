@@ -18,7 +18,7 @@ const FactureService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_FACTURE'])
       if (validatePermission) {
         const Factures = await Facture.findAll()
         return Factures;
@@ -40,7 +40,7 @@ const FactureService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_COST_CENTER'])
       if (validatePermission) {
         const validate = FactureValidation.createFacture(body);
         if (validate.error) {
@@ -79,7 +79,7 @@ const FactureService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_COST_CENTER'])
       if (validatePermission) {
         const validate = FactureValidation.getFacture(id);
         if (validate.error) {
@@ -103,7 +103,7 @@ const FactureService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_COST_CENTER'])
       if (validatePermission) {
         const validate = await FactureValidation.getFacture(id)
 
@@ -135,7 +135,7 @@ const FactureService = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE_COST_CENTER'])
       if (validatePermission) {
         
         const validateid = await FactureValidation.getFacture(id);
@@ -175,7 +175,7 @@ const FactureService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_COST_CENTER'])
       if (validatePermission) {
         const Factures = await Pagination('Factures',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Factures

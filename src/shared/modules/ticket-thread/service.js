@@ -24,7 +24,7 @@ const TicketThreadService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_TICKET_THREAD'])
       if (validatePermission) {
         const TicketThreads = await TicketThread.findAll()
         return TicketThreads;
@@ -46,8 +46,8 @@ const TicketThreadService = {
    */
   async create(bearerHeader, body) {
     try {
-      // const validatePermission = await permissions(bearerHeader, 'CREATE')
-      // if (validatePermission) {
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_TICKET_THREAD'])
+      if (validatePermission) {
         const validate = TicketThreadValidation.createTicketThread(body);
         if (validate.error) {
           throw new Error(validate.error)
@@ -69,11 +69,11 @@ const TicketThreadService = {
         await sendMail('syscomp', emailFrom, emailTo, subject,html)
 
         return ticketT;
-      // } 
-      // return {
-      //   message: 'no tienes permisos para esta acción',
-      //   status: 401
-      // }
+      } 
+      return {
+        message: 'no tienes permisos para esta acción',
+        status: 401
+      }
       
     } catch (error) {
       throw new Error(error.message)
@@ -87,7 +87,7 @@ const TicketThreadService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_TICKET_THREAD'])
       if (validatePermission) {
         const validate = TicketThreadValidation.getTicketThread(id);
         if (validate.error) {
@@ -111,7 +111,7 @@ const TicketThreadService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_TICKET_THREAD'])
       if (validatePermission) {
         const validate = await TicketThreadValidation.getTicketThread(id)
 
@@ -143,7 +143,7 @@ const TicketThreadService = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE_TICKET_THREAD'])
       if (validatePermission) {
         
         const validateid = await TicketThreadValidation.getTicketThread(id);
@@ -179,7 +179,7 @@ const TicketThreadService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_TICKET_THREAD'])
       if (validatePermission) {
         const TicketThreads = await Pagination('TicketThreads',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return TicketThreads

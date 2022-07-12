@@ -20,7 +20,7 @@ const NodeService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_NODE'])
       if (validatePermission) {
         const Nodes = await Node.findAll()
         return Nodes;
@@ -42,7 +42,7 @@ const NodeService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_NODE'])
       if (validatePermission) {
         const validate = NodeValidation.createNode(body);
         if (validate.error) {
@@ -91,7 +91,7 @@ const NodeService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_NODE'])
       if (validatePermission) {
         const validate = NodeValidation.getNode(id);
         if (validate.error) {
@@ -115,7 +115,7 @@ const NodeService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_NODE'])
       if (validatePermission) {
         const validate = await NodeValidation.getNode(id)
 
@@ -147,7 +147,7 @@ const NodeService = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'ALTER_USER')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE_NODE'])
       if (validatePermission) {
         
         const validateid = await NodeValidation.getNode(id);
@@ -186,7 +186,7 @@ const NodeService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_NODE'])
       if (validatePermission) {
         const Nodes = await Pagination('Nodes',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Nodes

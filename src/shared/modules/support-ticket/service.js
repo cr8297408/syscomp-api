@@ -18,7 +18,7 @@ const SupportTicketService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_SUPPORT_TICKET'])
       if (validatePermission) {
         const SupportTickets = await SupportTicket.findAll()
         return SupportTickets;
@@ -40,7 +40,7 @@ const SupportTicketService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_SUPPORT_TICKET'])
       if (validatePermission) {
         const validate = SupportTicketValidation.createSupportTicket(body);
         if (validate.error) {
@@ -67,7 +67,7 @@ const SupportTicketService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_SUPPORT_TICKET'])
       if (validatePermission) {
         const validate = SupportTicketValidation.getSupportTicket(id);
         if (validate.error) {
@@ -91,7 +91,7 @@ const SupportTicketService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_SUPPORT_TICKET'])
       if (validatePermission) {
         const validate = await SupportTicketValidation.getSupportTicket(id)
 
@@ -123,7 +123,7 @@ const SupportTicketService = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE_SUPPORT_TICKET'])
       if (validatePermission) {
         
         const validateid = await SupportTicketValidation.getSupportTicket(id);
@@ -158,7 +158,7 @@ const SupportTicketService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_SUPPORT_TICKET'])
       if (validatePermission) {
         const SupportTickets = await Pagination('SupportTickets',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return SupportTickets

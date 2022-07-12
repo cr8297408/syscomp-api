@@ -18,7 +18,7 @@ const LicenseService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_LICENSE'])
       if (validatePermission) {
         const Licenses = await License.findAll()
         return Licenses;
@@ -40,7 +40,7 @@ const LicenseService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_LICENSE'])
       if (validatePermission) {
         console.log('validate pass');
         const validate = LicenseValidation.createLicense(body);
@@ -68,7 +68,7 @@ const LicenseService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_LICENSE'])
       if (validatePermission) {
         const validate = LicenseValidation.getLicense(id);
         if (validate.error) {
@@ -92,7 +92,7 @@ const LicenseService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_LICENSE'])
       if (validatePermission) {
         const validate = await LicenseValidation.getLicense(id)
 
@@ -124,7 +124,7 @@ const LicenseService = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE_LICENSE'])
       if (validatePermission) {
         
         const validateid = await LicenseValidation.getLicense(id);
@@ -163,7 +163,7 @@ const LicenseService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_LICENSE'])
       if (validatePermission) {
         const Licenses = await Pagination('Licenses',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Licenses

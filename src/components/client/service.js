@@ -18,7 +18,7 @@ const ClientService = {
    */
   async findAll(bearerHeader){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ALL')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_CLIENT'])
       if (validatePermission) {
         const Clients = await Client.findAll()
         return Clients;
@@ -40,7 +40,7 @@ const ClientService = {
    */
   async create(bearerHeader, body) {
     try {
-      const validatePermission = await permissions(bearerHeader, 'CREATE')
+      const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_CLIENT'])
       if (validatePermission) {
         const validate = ClientValidation.createClient(body);
         if (validate.error) {
@@ -67,7 +67,7 @@ const ClientService = {
 
   async findOne(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_ONE')
+      const validatePermission = await permissions(bearerHeader, ['FIND_ONE', 'FIND_ONE_CLIENT'])
       if (validatePermission) {
         const validate = ClientValidation.getClient(id);
         if (validate.error) {
@@ -91,7 +91,7 @@ const ClientService = {
    */
   async delete(bearerHeader, id){
     try {
-      const validatePermission = await permissions(bearerHeader, 'DELETE')
+      const validatePermission = await permissions(bearerHeader, ['DELETE', 'DELETE_CLIENT'])
       if (validatePermission) {
         const validate = await ClientValidation.getClient(id)
 
@@ -128,7 +128,7 @@ const ClientService = {
    */
   async update(bearerHeader, id, body){
     try {
-      const validatePermission = await permissions(bearerHeader, 'UPDATE')
+      const validatePermission = await permissions(bearerHeader, ['UPDATE', 'UPDATE_CLIENT'])
       if (validatePermission) {
         
         const validateid = await ClientValidation.getClient(id);
@@ -163,7 +163,7 @@ const ClientService = {
 
   async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
     try {
-      const validatePermission = await permissions(bearerHeader, 'FIND_PAGINATION')
+      const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_CLIENT'])
       if (validatePermission) {
         const Clients = await Pagination('Clients',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Clients

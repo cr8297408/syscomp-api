@@ -10,12 +10,17 @@ async function havePermissions(bearerHeader, action){
       if (decoded) {
         const usertype = decoded.dataToken.typeUser
         const type = permissions[usertype];
-        console.log(decoded.dataToken.isActive);
+        let response = false;
         if (decoded.dataToken.isActive) {
-          return type[action]
-          
-        }
-        return false
+          action.forEach(i => {
+            let boolean = type[i];
+            if (boolean) {
+              response = boolean
+            }
+          });
+          // return false
+        } 
+        return response;
       }
   }
 }

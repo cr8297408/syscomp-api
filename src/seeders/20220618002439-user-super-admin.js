@@ -12,7 +12,8 @@ module.exports = {
       lastName: "user1",
       avatarFile: "avaatarlink1",
       typeUser: "SUPER_ADMIN",
-      isActive: true
+      isActive: true,
+      isAdmin: true
     }]
     await queryInterface.bulkInsert('users', user, {});
   },
