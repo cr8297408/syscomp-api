@@ -220,7 +220,6 @@ const UserService = {
         const newUser = await User.update(
           {
             username: body.username,
-            email:body.email,
             firstName: body.firstName,
             lastName: body.lastName,
             roles: body.roles,
