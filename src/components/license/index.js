@@ -4,7 +4,7 @@ const LicenseService = require('./service');
 async function findAll(req, res, next) {
   try {
     const Licenses = await LicenseService.findAll(req.headers['authorization'])
-    res.status(200).json(Licenses)
+    res.json(Licenses)
   } catch (error) {
     res.json(error.message)
   }
@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
 async function create(req, res, next){
   try {
     const getLicense = await LicenseService.create(req.headers['authorization'],req.body);
-    res.status(201).json(getLicense)
+    res.json(getLicense)
   
   } catch (error) {
     res.json(error.message)
@@ -24,9 +24,9 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getLicense = await LicenseService.findOne(req.headers['authorization'],req.params.id)
-    res.status(200).json(getLicense)
+    res.json(getLicense)
   } catch (error) {
-    res.status(404).json(error.message)
+    res.json(error.message)
   }
 }
 

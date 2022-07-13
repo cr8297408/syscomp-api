@@ -4,7 +4,7 @@ const ClientService = require('./service');
 async function findAll(req, res, next) {
   try {
     const Clients = await ClientService.findAll(req.headers['authorization'])
-    res.status(200).json(Clients)
+    res.json(Clients)
   } catch (error) {
     res.json(error.message)
   }
@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
 async function create(req, res, next){
   try {
     const getClient = await ClientService.create(req.headers['authorization'],req.body);
-    res.status(201).json(getClient)
+    res.json(getClient)
   
   } catch (error) {
     res.json(error.message)
@@ -24,9 +24,9 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getClient = await ClientService.findOne(req.headers['authorization'],req.params.id)
-    res.status(200).json(getClient)
+    res.json(getClient)
   } catch (error) {
-    res.status(404).json(error.message)
+    res.json(error.message)
   }
 }
 

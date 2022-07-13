@@ -4,7 +4,7 @@ const NodeService = require('./service');
 async function findAll(req, res, next) {
   try {
     const Nodes = await NodeService.findAll(req.headers['authorization'])
-    res.status(200).json(Nodes)
+    res.json(Nodes)
   } catch (error) {
     res.json(error.message)
   }
@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
 async function create(req, res, next){
   try {
     const getNode = await NodeService.create(req.headers['authorization'],req.body);
-    res.status(201).json(getNode)
+    res.json(getNode)
   
   } catch (error) {
     res.json(error.message)
@@ -24,9 +24,9 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getNode = await NodeService.findOne(req.headers['authorization'],req.params.id)
-    res.status(200).json(getNode)
+    res.json(getNode)
   } catch (error) {
-    res.status(404).json(error.message)
+    res.json(error.message)
   }
 }
 

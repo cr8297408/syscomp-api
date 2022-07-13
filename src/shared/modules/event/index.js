@@ -4,7 +4,7 @@ const EventService = require('./service');
 async function findAll(req, res, next) {
   try {
     const Events = await EventService.findAll(req.headers['authorization'])
-    res.status(200).json(Events)
+    res.json(Events)
   } catch (error) {
     res.json(error.message)
   }
@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
 async function create(req, res, next){
   try {
     const getEvent = await EventService.create(req.headers['authorization'],req.body);
-    res.status(201).json(getEvent)
+    res.json(getEvent)
   
   } catch (error) {
     res.json(error.message)
@@ -24,9 +24,9 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getEvent = await EventService.findOne(req.headers['authorization'],req.params.id)
-    res.status(200).json(getEvent)
+    res.json(getEvent)
   } catch (error) {
-    res.status(404).json(error.message)
+    res.json(error.message)
   }
 }
 

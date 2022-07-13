@@ -4,7 +4,7 @@ const CostCenterService = require('./service');
 async function findAll(req, res, next) {
   try {
     const CostCenters = await CostCenterService.findAll(req.headers['authorization'])
-    res.status(200).json(CostCenters)
+    res.json(CostCenters)
   } catch (error) {
     res.json(error.message)
   }
@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
 async function create(req, res, next){
   try {
     const getCostCenter = await CostCenterService.create(req.headers['authorization'],req.body);
-    res.status(201).json(getCostCenter)
+    res.json(getCostCenter)
   
   } catch (error) {
     res.json(error.message)
@@ -24,9 +24,9 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getCostCenter = await CostCenterService.findOne(req.headers['authorization'],req.params.id)
-    res.status(200).json(getCostCenter)
+    res.json(getCostCenter)
   } catch (error) {
-    res.status(404).json(error.message)
+    res.json(error.message)
   }
 }
 

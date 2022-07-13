@@ -4,7 +4,7 @@ const FileService = require('./service');
 async function findAll(req, res, next) {
   try {
     const Files = await FileService.findAll(req.headers['authorization'])
-    res.status(200).json(Files)
+    res.json(Files)
   } catch (error) {
     res.json(error.message)
   }
@@ -14,7 +14,7 @@ async function create(req, res, next){
   try {
     const {path, originalname} = req.file;
     const getFile = await FileService.create(req.headers['authorization'],req.body, path, originalname);
-    res.status(201).json(getFile)
+    res.json(getFile)
   
   } catch (error) {
     res.json(error.message)
@@ -25,9 +25,9 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getFile = await FileService.findOne(req.headers['authorization'],req.params.id)
-    res.status(200).json(getFile)
+    res.json(getFile)
   } catch (error) {
-    res.status(404).json(error.message)
+    res.json(error.message)
   }
 }
 

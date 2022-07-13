@@ -4,7 +4,7 @@ const SupportTicketService = require('./service');
 async function findAll(req, res, next) {
   try {
     const SupportTickets = await SupportTicketService.findAll(req.headers['authorization'])
-    res.status(200).json(SupportTickets)
+    res.json(SupportTickets)
   } catch (error) {
     res.json(error.message)
   }
@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
 async function create(req, res, next){
   try {
     const getSupportTicket = await SupportTicketService.create(req.headers['authorization'],req.body);
-    res.status(201).json(getSupportTicket)
+    res.json(getSupportTicket)
   
   } catch (error) {
     res.json(error.message)
@@ -24,9 +24,9 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getSupportTicket = await SupportTicketService.findOne(req.headers['authorization'],req.params.id)
-    res.status(200).json(getSupportTicket)
+    res.json(getSupportTicket)
   } catch (error) {
-    res.status(404).json(error.message)
+    res.json(error.message)
   }
 }
 
