@@ -129,13 +129,10 @@ const __name__Service = {
         const validateid = await __name__Validation.get__name__(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          throw new Error(validateid.error)
         }
   
-        const validateBody = await __name__Validation.create__name__(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
+
         const new__name__ = await __name__.update(
           {
             name: body.name,

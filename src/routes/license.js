@@ -110,7 +110,7 @@ const router = Router();
   * @swagger
   *  /v1/Licenses:
   *      post:
-  *          summary: added a License
+  *          summary: tener en cuenta que necesita el id de un cliente para crear una licensia y asignarla a dicho cliente
   *          tags: ["Licenses"]
   *          requestBody:
   *              required: true

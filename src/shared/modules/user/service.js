@@ -211,10 +211,6 @@ const UserService = {
         if (validateid.error) {
           throw new Error(validate.error)
         }
-        const validateBody = await UserValidation.createUser(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
 
         const user = await getUser(bearerHeader);
         const newUser = await User.update(

@@ -48,9 +48,6 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
-      nodes: {
-        type: Sequelize.DataTypes.JSON
-      },
       isLifetime: {
         type: Sequelize.DataTypes.BOOLEAN,
         defaultValue: false

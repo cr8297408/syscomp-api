@@ -152,10 +152,6 @@ const TicketThreadService = {
           throw new Error(validate.error)
         }
   
-        const validateBody = await TicketThreadValidation.createTicketThread(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
         const newTicketThread = await TicketThread.update(
           {
             response: body.respose, 
@@ -173,7 +169,7 @@ const TicketThreadService = {
         status: 401
       }
     } catch (error) {
-      
+      throw new Error(error.message);
     }
   },
 

@@ -135,10 +135,6 @@ const EventService = {
           throw new Error(validate.error)
         }
   
-        const validateBody = await EventValidation.createEvent(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
         const newEvent = await Event.update(
           {
             icon: body.icon,
@@ -160,7 +156,7 @@ const EventService = {
         status: 401
       }
     } catch (error) {
-      
+      throw new Error(error.message);
     }
   },
 

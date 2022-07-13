@@ -129,13 +129,9 @@ const PaymentService = {
         const validateid = await PaymentValidation.getPayment(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          throw new Error(validateid.error)
         }
-  
-        const validateBody = await PaymentValidation.createPayment(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
+
         const newPayment = await Payment.update(
           {
             observations: body.observations,
@@ -154,7 +150,7 @@ const PaymentService = {
         status: 401
       }
     } catch (error) {
-      
+      throw new Error(error.message)
     }
   },
 

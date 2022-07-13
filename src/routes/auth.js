@@ -158,7 +158,8 @@ const router = Router();
   *                  type: string
   *          example:
   *              email: admin1@mail.com
-  *              password: Admin1
+  *              oldPassword: Admin@123
+  *              newPassword: Admin@1234
   *      forgotPass:
   *          type: object
   *          required:

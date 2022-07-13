@@ -129,13 +129,9 @@ const ItemService = {
         const validateid = await ItemValidation.getItem(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          throw new Error(validateid.error)
         }
   
-        const validateBody = await ItemValidation.createItem(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
         const newItem = await Item.update(
           {
             sum: body.sum,
@@ -154,7 +150,7 @@ const ItemService = {
         status: 401
       }
     } catch (error) {
-      
+      throw new Error(error.message)
     }
   },
 

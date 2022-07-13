@@ -76,7 +76,6 @@ const CostCenterService = {
           price: body.price ,
           debit: body.debit ,
           direction: body.direction ,
-          nodes: body.nodes ,
           isLifetime: body.isLifetime ,
           isActive: body.isActive ,
         });
@@ -196,13 +195,9 @@ const CostCenterService = {
         const validateid = await CostCenterValidation.getCostCenter(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          throw new Error(validateid.error)
         }
   
-        const validateBody = await CostCenterValidation.createCostCenter(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
         const newCostCenter = await CostCenter.update(
           {
             name: body.name,
@@ -211,7 +206,6 @@ const CostCenterService = {
             price: body.price ,
             debit: body.debit ,
             direction: body.direction ,
-            nodes: body.nodes ,
             isLifetime: body.isLifetime ,
             isActive: body.isActive ,
           },
@@ -226,7 +220,7 @@ const CostCenterService = {
         status: 401
       }
     } catch (error) {
-      
+      throw new Error(error.message);
     }
   },
 

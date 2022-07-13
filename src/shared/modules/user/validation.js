@@ -23,7 +23,6 @@ class UserValidation {
         password: Joi.string().required(),
         firstName: Joi.string().required(),
         lastName: Joi.string(),
-        roles: Joi.object().required(),
         profile: Joi.object(),
         isActive: Joi.boolean(),
         isAdmin: Joi.boolean(),

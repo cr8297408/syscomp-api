@@ -138,8 +138,11 @@ const SupportTicketService = {
         }
         const newSupportTicket = await SupportTicket.update(
           {
-            name: body.name,
-            accountingAccount: body.accountingAccount 
+            title: body.title,
+            subject: body.subject,
+            reason: body.reason,
+            estate: body.estate,
+            priority: body.priority
           },
           {where: {id}}
         )

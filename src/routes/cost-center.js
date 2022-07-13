@@ -135,7 +135,7 @@ const router = Router();
   * @swagger
   *  /v1/CostCenters:
   *      post:
-  *          summary: added a CostCenter
+  *          summary: para agregar un centro de costo, primero debes crear un cliente y con ese cliente una licensia, el id de dicha licensia se usará para crear el centro de costo
   *          tags: ["CostCenters"]
   *          requestBody:
   *              required: true

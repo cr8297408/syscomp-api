@@ -153,13 +153,9 @@ const NodeService = {
         const validateid = await NodeValidation.getNode(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          throw new Error(validateid.error)
         }
-  
-        const validateBody = await NodeValidation.createNode(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
+
         const newNode = await Node.update(
           {
             initDate: body.initDate ,
@@ -180,7 +176,7 @@ const NodeService = {
         status: 401
       }
     } catch (error) {
-      
+      throw new Error(error.message)
     }
   },
 

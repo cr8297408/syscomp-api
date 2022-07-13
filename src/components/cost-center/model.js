@@ -36,9 +36,6 @@ const CostCenter = sequelize.define('CostCenter', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  nodes: {
-    type: DataTypes.JSON
-  },
   isLifetime: {
     type: DataTypes.BOOLEAN,
     defaultValue: false

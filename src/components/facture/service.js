@@ -141,13 +141,9 @@ const FactureService = {
         const validateid = await FactureValidation.getFacture(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          throw new Error(validateid.error)
         }
   
-        const validateBody = await FactureValidation.createFacture(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
         const newFacture = await Facture.update(
           {
             UserId: body.UserId,
@@ -169,7 +165,7 @@ const FactureService = {
         status: 401
       }
     } catch (error) {
-      
+      throw new Error(error.message)
     }
   },
 

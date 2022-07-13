@@ -111,7 +111,7 @@ const NotificationService = {
         status: 401
       }
     } catch (error) {
-      throw new Error(error)
+      throw new Error(error.message);
     }
   },
 

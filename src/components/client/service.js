@@ -42,7 +42,18 @@ const ClientService = {
     try {
       const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_CLIENT'])
       if (validatePermission) {
-        const validate = ClientValidation.createClient(body);
+        const validate = ClientValidation.createClient({
+          businessName: body.businessName,
+          nit: body.nit,
+          email: body.email,
+          repLegalContact: body.repLegalContact,
+          phoneNumber: body.phoneNumber,
+          municipality: body.municipality,
+          department: body.department,
+          country: body.country,
+          contactDate: body.contactDate,
+          direction : body.direction,
+        });
         if (validate.error) {
           throw new Error(validate.error)
         }
@@ -107,8 +118,6 @@ const ClientService = {
         )
   
         return newUser;
-
-        return getClient;
         
       } 
       return {
@@ -134,17 +143,19 @@ const ClientService = {
         const validateid = await ClientValidation.getClient(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          throw new Error(validateid.error)
         }
   
-        const validateBody = await ClientValidation.createClient(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
         const newClient = await Client.update(
           {
-            name: body.name,
-            accountingAccount: body.accountingAccount 
+            businessName: body.businessName,
+            repLegalContact: body.repLegalContact,
+            phoneNumber: body.phoneNumber,
+            municipality: body.municipality,
+            department: body.department,
+            country: body.country,
+            contactDate: body.contactDate,
+            direction : body.direction,
           },
           {where: {id}}
         )
@@ -157,7 +168,7 @@ const ClientService = {
         status: 401
       }
     } catch (error) {
-      
+      throw new Error(error.message);
     }
   },
 
@@ -165,7 +176,7 @@ const ClientService = {
     try {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_CLIENT'])
       if (validatePermission) {
-        const Clients = await Pagination('Clients',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        const Clients = await Pagination('clients',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Clients
       } 
       return {

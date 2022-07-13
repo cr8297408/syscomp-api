@@ -47,7 +47,10 @@ const ReportTypeService = {
           throw new Error(validate.error)
         }
   
-        const createReportType = await ReportType.create(body);
+        const createReportType = await ReportType.create({
+          name: body.name,
+          description: body.description 
+        });
         return createReportType;
       } 
       return {
@@ -111,7 +114,7 @@ const ReportTypeService = {
         status: 401
       }
     } catch (error) {
-      throw new Error(error)
+      throw new Error(error.message)
     }
   },
 
@@ -132,14 +135,10 @@ const ReportTypeService = {
           throw new Error(validate.error)
         }
   
-        const validateBody = await ReportTypeValidation.createReportType(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
         const newReportType = await ReportType.update(
           {
             name: body.name,
-            accountingAccount: body.accountingAccount 
+            description: body.description 
           },
           {where: {id}}
         )
@@ -152,7 +151,7 @@ const ReportTypeService = {
         status: 401
       }
     } catch (error) {
-      
+      throw new Error(error.message);
     }
   },
 

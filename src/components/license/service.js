@@ -130,13 +130,9 @@ const LicenseService = {
         const validateid = await LicenseValidation.getLicense(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          throw new Error(validateid.error)
         }
-  
-        const validateBody = await LicenseValidation.createLicense(body)
-        if (validateBody.error) {
-          throw new Error(validate.error)
-        }
+
         const newLicense = await License.update(
           {
             type: body.type,
@@ -157,7 +153,7 @@ const LicenseService = {
         status: 401
       }
     } catch (error) {
-      
+      throw new Error(error.message);
     }
   },
 
