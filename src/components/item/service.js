@@ -1,8 +1,9 @@
 const db = require('../../config/connection/connectBd');
 const ItemValidation = require('./validation');
 const Item = require('./model');
-const Pagination = require('../../shared/middlewares/pagination')
-const permissions = require('../../shared/middlewares/permissions')
+const Pagination = require('../../shared/middlewares/pagination');
+const permissions = require('../../shared/middlewares/permissions');
+const HttpError = require('../../shared/errors');
 
 sequelize = db.sequelize;
 
@@ -23,12 +24,10 @@ const ItemService = {
         const Items = await Item.findAll()
         return Items;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -44,19 +43,17 @@ const ItemService = {
       if (validatePermission) {
         const validate = ItemValidation.createItem(body);
         if (validate.error) {
-          throw new Error(validate.error)
+          new HttpError(400, validate.error)
         }
   
         const createItem = await Item.create(body);
         return createItem;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -71,17 +68,15 @@ const ItemService = {
       if (validatePermission) {
         const validate = ItemValidation.getItem(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const getItem = await Item.findByPk(id)
         return getItem;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   /**
@@ -96,7 +91,7 @@ const ItemService = {
         const validate = await ItemValidation.getItem(id)
 
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
 
         const getItem = await Item.findByPk(id);
@@ -106,12 +101,10 @@ const ItemService = {
         return getItem;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -129,7 +122,7 @@ const ItemService = {
         const validateid = await ItemValidation.getItem(id);
         
         if (validateid.error) {
-          throw new Error(validateid.error)
+          return new HttpError(400, validateid.error);
         }
   
         const newItem = await Item.update(
@@ -145,12 +138,10 @@ const ItemService = {
         return newItem;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -161,12 +152,10 @@ const ItemService = {
         const Items = await Pagination('Items',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Items
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 }

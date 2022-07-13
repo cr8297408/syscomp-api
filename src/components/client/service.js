@@ -2,7 +2,8 @@ const db = require('../../config/connection/connectBd');
 const ClientValidation = require('./validation');
 const Client = require('./model');
 const Pagination = require('../../shared/middlewares/pagination')
-const permissions = require('../../shared/middlewares/permissions')
+const permissions = require('../../shared/middlewares/permissions');
+const HttpError = require('../../shared/errors');
 
 sequelize = db.sequelize;
 
@@ -23,12 +24,10 @@ const ClientService = {
         const Clients = await Client.findAll()
         return Clients;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -42,7 +41,13 @@ const ClientService = {
     try {
       const validatePermission = await permissions(bearerHeader, ['CREATE', 'CREATE_CLIENT'])
       if (validatePermission) {
-        const validate = ClientValidation.createClient({
+        const validate = ClientValidation.createClient(body);
+        if (validate.error) {
+          console.log(new HttpError(400, validate.error));
+          return new HttpError(400, validate.error);
+        }
+  
+        const createClient = await Client.create({
           businessName: body.businessName,
           nit: body.nit,
           email: body.email,
@@ -54,20 +59,13 @@ const ClientService = {
           contactDate: body.contactDate,
           direction : body.direction,
         });
-        if (validate.error) {
-          throw new Error(validate.error)
-        }
-  
-        const createClient = await Client.create(body);
         return createClient;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -82,17 +80,15 @@ const ClientService = {
       if (validatePermission) {
         const validate = ClientValidation.getClient(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
-        const getClient = await Client.findByPk(id)
+        const getClient = await Client.findByPk(id);
         return getClient;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   /**
@@ -107,7 +103,7 @@ const ClientService = {
         const validate = await ClientValidation.getClient(id)
 
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
 
         const newUser = await Client.update(
@@ -120,12 +116,10 @@ const ClientService = {
         return newUser;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -143,7 +137,7 @@ const ClientService = {
         const validateid = await ClientValidation.getClient(id);
         
         if (validateid.error) {
-          throw new Error(validateid.error)
+          return new HttpError(400, validateid.error)
         }
   
         const newClient = await Client.update(
@@ -163,12 +157,10 @@ const ClientService = {
         return newClient;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 
@@ -179,12 +171,10 @@ const ClientService = {
         const Clients = await Pagination('clients',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Clients
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 }

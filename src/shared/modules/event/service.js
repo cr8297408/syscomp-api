@@ -5,6 +5,7 @@ const Pagination = require('../../middlewares/pagination');
 const permissions = require('../../middlewares/permissions');
 const EventUser = require('./eventsUser.model');
 const User = require('../user/model');
+const HttpError = require('../../errors');
 
 sequelize = db.sequelize;
 
@@ -21,17 +22,14 @@ const EventService = {
   async findAll(bearerHeader){
     try {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_EVENT']);
-      console.log(validatePermission)
       if (validatePermission) {
         const Events = await Event.findAll()
         return Events;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -47,19 +45,17 @@ const EventService = {
       if (validatePermission) {
         const validate = EventValidation.createEvent(body);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
   
         const createEvent = await Event.create(body);
         return createEvent;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -74,17 +70,15 @@ const EventService = {
       if (validatePermission) {
         const validate = EventValidation.getEvent(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const getEvent = await Event.findByPk(id)
         return getEvent;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   /**
@@ -99,7 +93,7 @@ const EventService = {
         const validate = await EventValidation.getEvent(id)
 
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
 
         const getEvent = await Event.findByPk(id);
@@ -109,12 +103,10 @@ const EventService = {
         return getEvent;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -132,7 +124,7 @@ const EventService = {
         const validateid = await EventValidation.getEvent(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
   
         const newEvent = await Event.update(
@@ -151,12 +143,10 @@ const EventService = {
         return newEvent;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 
@@ -167,12 +157,10 @@ const EventService = {
         const Events = await Pagination('Events',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Events
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 

@@ -1,8 +1,9 @@
 const db = require('../../config/connection/connectBd');
 const LicenseValidation = require('./validation');
 const License = require('./model');
-const Pagination = require('../../shared/middlewares/pagination')
-const permissions = require('../../shared/middlewares/permissions')
+const Pagination = require('../../shared/middlewares/pagination');
+const permissions = require('../../shared/middlewares/permissions');
+const HttpError = require('../../shared/errors');
 
 sequelize = db.sequelize;
 
@@ -23,12 +24,10 @@ const LicenseService = {
         const Licenses = await License.findAll()
         return Licenses;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -45,19 +44,17 @@ const LicenseService = {
         console.log('validate pass');
         const validate = LicenseValidation.createLicense(body);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         console.log(body);
         const createLicense = await License.create(body);
         return createLicense;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -72,17 +69,15 @@ const LicenseService = {
       if (validatePermission) {
         const validate = LicenseValidation.getLicense(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const getLicense = await License.findByPk(id)
         return getLicense;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   /**
@@ -97,7 +92,7 @@ const LicenseService = {
         const validate = await LicenseValidation.getLicense(id)
 
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
 
         const getLicense = await License.findByPk(id);
@@ -107,12 +102,10 @@ const LicenseService = {
         return getLicense;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -130,7 +123,7 @@ const LicenseService = {
         const validateid = await LicenseValidation.getLicense(id);
         
         if (validateid.error) {
-          throw new Error(validateid.error)
+          return new HttpError(400, validateid.error);
         }
 
         const newLicense = await License.update(
@@ -148,12 +141,10 @@ const LicenseService = {
         return newLicense;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 
@@ -164,12 +155,10 @@ const LicenseService = {
         const Licenses = await Pagination('Licenses',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Licenses
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 }

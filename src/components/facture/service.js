@@ -1,8 +1,9 @@
 const db = require('../../config/connection/connectBd');
 const FactureValidation = require('./validation');
 const Facture = require('./model');
-const Pagination = require('../../shared/middlewares/pagination')
-const permissions = require('../../shared/middlewares/permissions')
+const Pagination = require('../../shared/middlewares/pagination');
+const permissions = require('../../shared/middlewares/permissions');
+const HttpError = require('../../shared/errors');
 
 sequelize = db.sequelize;
 
@@ -23,12 +24,10 @@ const FactureService = {
         const Factures = await Facture.findAll()
         return Factures;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -44,7 +43,7 @@ const FactureService = {
       if (validatePermission) {
         const validate = FactureValidation.createFacture(body);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
 
         let data = {
@@ -62,13 +61,11 @@ const FactureService = {
         const createFacture = await Facture.create(data);
         return createFacture;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -83,17 +80,15 @@ const FactureService = {
       if (validatePermission) {
         const validate = FactureValidation.getFacture(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          new HttpError(400, validate.error)
         }
         const getFacture = await Facture.findByPk(id)
         return getFacture;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   /**
@@ -108,7 +103,7 @@ const FactureService = {
         const validate = await FactureValidation.getFacture(id)
 
         if (validate.error) {
-          throw new Error(validate.error)
+          new HttpError(400, validate.error)
         }
 
         const getFacture = await Facture.findByPk(id);
@@ -118,12 +113,10 @@ const FactureService = {
         return getFacture;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -141,7 +134,7 @@ const FactureService = {
         const validateid = await FactureValidation.getFacture(id);
         
         if (validateid.error) {
-          throw new Error(validateid.error)
+          return new HttpError(400, validateid.error);
         }
   
         const newFacture = await Facture.update(
@@ -160,12 +153,10 @@ const FactureService = {
         return newFacture;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -176,12 +167,10 @@ const FactureService = {
         const Factures = await Pagination('Factures',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Factures
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 }

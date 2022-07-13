@@ -9,6 +9,7 @@ const config = require('../../../config/env');
 const getUser = require('../../middlewares/getUser');
 const SupportTicket = require('../support-ticket/model');
 const User = require('../user/model');
+const HttpError = require('../../errors');
 
 sequelize = db.sequelize;
 
@@ -29,12 +30,10 @@ const TicketThreadService = {
         const TicketThreads = await TicketThread.findAll()
         return TicketThreads;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -50,7 +49,7 @@ const TicketThreadService = {
       if (validatePermission) {
         const validate = TicketThreadValidation.createTicketThread(body);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const ticketT = await TicketThread.create(body)
         const user = await getUser(bearerHeader);
@@ -70,13 +69,11 @@ const TicketThreadService = {
 
         return ticketT;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -91,17 +88,15 @@ const TicketThreadService = {
       if (validatePermission) {
         const validate = TicketThreadValidation.getTicketThread(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const getTicketThread = await TicketThread.findByPk(id)
         return getTicketThread;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   /**
@@ -116,7 +111,7 @@ const TicketThreadService = {
         const validate = await TicketThreadValidation.getTicketThread(id)
 
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
 
         const getTicketThread = await TicketThread.findByPk(id);
@@ -126,12 +121,10 @@ const TicketThreadService = {
         return getTicketThread;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -149,7 +142,7 @@ const TicketThreadService = {
         const validateid = await TicketThreadValidation.getTicketThread(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validateid.error);
         }
   
         const newTicketThread = await TicketThread.update(
@@ -164,12 +157,10 @@ const TicketThreadService = {
         return newTicketThread;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 
@@ -180,12 +171,10 @@ const TicketThreadService = {
         const TicketThreads = await Pagination('TicketThreads',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return TicketThreads
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 }

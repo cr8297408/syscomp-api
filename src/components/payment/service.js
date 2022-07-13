@@ -2,7 +2,8 @@ const db = require('../../config/connection/connectBd');
 const PaymentValidation = require('./validation');
 const Payment = require('./model');
 const Pagination = require('../../shared/middlewares/pagination')
-const permissions = require('../../shared/middlewares/permissions')
+const permissions = require('../../shared/middlewares/permissions');
+const HttpError = require('../../shared/errors');
 
 sequelize = db.sequelize;
 
@@ -23,12 +24,10 @@ const PaymentService = {
         const Payments = await Payment.findAll()
         return Payments;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -44,19 +43,17 @@ const PaymentService = {
       if (validatePermission) {
         const validate = PaymentValidation.createPayment(body);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
   
         const createPayment = await Payment.create(body);
         return createPayment;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -71,17 +68,15 @@ const PaymentService = {
       if (validatePermission) {
         const validate = PaymentValidation.getPayment(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const getPayment = await Payment.findByPk(id)
         return getPayment;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   /**
@@ -96,7 +91,7 @@ const PaymentService = {
         const validate = await PaymentValidation.getPayment(id)
 
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
 
         const getPayment = await Payment.findByPk(id);
@@ -106,12 +101,10 @@ const PaymentService = {
         return getPayment;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -129,7 +122,7 @@ const PaymentService = {
         const validateid = await PaymentValidation.getPayment(id);
         
         if (validateid.error) {
-          throw new Error(validateid.error)
+          return new HttpError(400, validateid.error);
         }
 
         const newPayment = await Payment.update(
@@ -145,12 +138,10 @@ const PaymentService = {
         return newPayment;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -161,12 +152,10 @@ const PaymentService = {
         const Payments = await Pagination('Payments',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Payments
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 }

@@ -2,13 +2,14 @@ const bcrypt = require('bcrypt');
 const User = require('./model');
 const db = require('../../../config/connection/connectBd');
 const UserValidation = require('./validation');
-const FileService = require('../files/service');
+const FileService = require('../files/aws-cloud-service');
 const Pagination = require('../../middlewares/pagination');
 const {TemplateSign} = require('../../resources/getTemplate');
 const config = require('../../../config/env');
 const permissions = require('../../middlewares/permissions');
 const sendMail = require('../../resources/send-mail');
 const getUser = require('../../middlewares/getUser');
+const HttpError = require('../../errors');
 
 sequelize = db.sequelize;
 
@@ -24,12 +25,10 @@ const UserService = {
         const Users = await User.findAll()
         return Users;  
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -44,7 +43,7 @@ const UserService = {
       if (validatePermission) {
         const validate = UserValidation.createUser(body);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const existsMail = await User.findOne({
           where: {
@@ -58,16 +57,10 @@ const UserService = {
         })
   
         if (existsMail) {
-          return {
-            status: 400,
-            message: 'el email ya está en uso '
-          }
+          return new HttpError(400, 'email en uso');
         }
         if (existsUser) {
-          return {
-            status: 400,
-            message: 'el usuario ya está en uso '
-          }
+          return new HttpError(400, 'usuario en uso');
         }
         const user = await getUser(bearerHeader);
   
@@ -94,13 +87,11 @@ const UserService = {
         await sendMail('syscomp', emailFrom, emailTo, subject,html)
         return createdUser;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
 
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -115,17 +106,15 @@ const UserService = {
       if (validatePermission) {
         const validate = UserValidation.getUser(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const getsUser = await User.findByPk(id)
         return getsUser;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   /**
@@ -140,7 +129,7 @@ const UserService = {
         const validate = await UserValidation.getUser(id)
   
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const newUser = await User.update(
           {
@@ -152,10 +141,8 @@ const UserService = {
   
         return newUser;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
       throw new Error(error)
     }
@@ -175,7 +162,7 @@ const UserService = {
         const validate = await UserValidation.getUser(id)
   
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const newUser = await User.update(
           {
@@ -186,12 +173,10 @@ const UserService = {
   
         return newUser;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -209,7 +194,7 @@ const UserService = {
         const validateid = await UserValidation.getUser(id);
         
         if (validateid.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validateid.error);
         }
 
         const user = await getUser(bearerHeader);
@@ -230,13 +215,11 @@ const UserService = {
   
         return newUser;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
 
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -247,13 +230,11 @@ const UserService = {
         const Users = await Pagination('users',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Users
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
 
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 
@@ -261,7 +242,7 @@ const UserService = {
     try {
       const user = await getUser(bearerHeader);
       if (!user) {
-        throw new Error('token invalido...')
+        return new HttpError(400, 'token invalido');
       }
       const avatar = await FileService.uploadFile(path, originalname); 
       const userModif = await User.update({
@@ -273,7 +254,7 @@ const UserService = {
       return userModif
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   }
 }

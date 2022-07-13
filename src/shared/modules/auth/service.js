@@ -8,6 +8,7 @@ const config = require('../../../config/env');
 const getUser = require('../../middlewares/getUser');
 const sendMail = require('../../resources/send-mail');
 const {TemplateSign} = require('../../resources/getTemplate');
+const HttpError = require('../../errors');
 
 sequelize = db.sequelize;
 
@@ -21,7 +22,7 @@ const AuthService = {
     try {
       const validate = AuthValidation.getAuth(body);
       if (validate.error) {
-        throw new Error(validate.error)
+        return new HttpError(400, validate.error);
       }
 
       const user = await User.findOne({
@@ -29,11 +30,11 @@ const AuthService = {
       })
 
       if (!user) {
-        throw new Error('credenciales incorrectas')
+        return new HttpError(400, 'credenciales incorrectas');
       }
       const result = bcrypt.compareSync(body.password, user.password);
       if (!result) {
-        throw new Error('credenciales incorrectas')
+        return new HttpError(400, 'credenciales incorrectas');
       }
       const dataToken = {
         id : user.id,
@@ -46,7 +47,7 @@ const AuthService = {
       return token;
 
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -56,10 +57,7 @@ const AuthService = {
       const comparePass = bcrypt.compareSync(body.oldPassword,user.password);
       console.log(comparePass);
       if(body.email !== user.email || !comparePass){
-        return {
-          message: 'credenciales incorrectas...',
-          status: 401
-        }
+        return new HttpError(400, 'credenciales incorrectas');
       }
 
       const changePassword = await User.update({
@@ -73,7 +71,7 @@ const AuthService = {
       return changePassword;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -87,7 +85,7 @@ const AuthService = {
       })
 
       if (!user) {
-        throw new Error(message)
+        return new HttpError(400, 'credenciales incorrectas');
       }
 
       const dataToken = {
@@ -114,7 +112,7 @@ const AuthService = {
       return message;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -132,7 +130,7 @@ const AuthService = {
       return changePassword;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   
@@ -140,11 +138,11 @@ const AuthService = {
     try {
       const user = await getUser(bearerHeader);
       if (!user) {
-        throw new Error('token invalido...')
+        return new HttpError(400, 'token invalido');
       }
       return user;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   }
 }

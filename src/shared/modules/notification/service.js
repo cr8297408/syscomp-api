@@ -3,6 +3,7 @@ const NotificationValidation = require('./validation');
 const Notification = require('./model');
 const Pagination = require('../../../shared/middlewares/pagination');
 const permissions = require('../../../shared/middlewares/permissions');
+const HttpError = require('../../errors');
 
 sequelize = db.sequelize;
 
@@ -23,12 +24,10 @@ const NotificationService = {
         const Notifications = await Notification.findAll()
         return Notifications;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -44,19 +43,17 @@ const NotificationService = {
       if (validatePermission) {
         const validate = NotificationValidation.createNotification(body);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
   
         const createNotification = await Notification.create(body);
         return createNotification;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -71,17 +68,15 @@ const NotificationService = {
       if (validatePermission) {
         const validate = NotificationValidation.getNotification(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const getNotification = await Notification.findByPk(id)
         return getNotification;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   /**
@@ -96,7 +91,7 @@ const NotificationService = {
         const validate = await NotificationValidation.getNotification(id)
 
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
 
         const getNotification = await Notification.findByPk(id);
@@ -106,12 +101,10 @@ const NotificationService = {
         return getNotification;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 
@@ -122,12 +115,10 @@ const NotificationService = {
         const Notifications = await Pagination('Notifications',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return Notifications
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 }

@@ -6,6 +6,7 @@ const Pagination = require('../../shared/middlewares/pagination')
 const permissions = require('../../shared/middlewares/permissions');
 const { UUIDV4 } = require('sequelize');
 const Node = require('../node/model');
+const HttpError = require('../../shared/errors');
 
 sequelize = db.sequelize;
 
@@ -26,12 +27,10 @@ const CostCenterService = {
         const CostCenters = await CostCenter.findAll()
         return CostCenters;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -47,13 +46,13 @@ const CostCenterService = {
       if (validatePermission) {
         const validate = CostCenterValidation.createCostCenter(body);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
 
         const LicenseCostCenter = await License.findByPk(body.LicenseId);
 
         if (!LicenseCostCenter) {
-          throw new Error('licencia invalida...')
+          return new HttpError(400, "licencia invalida...");
         }
 
         const CostCentersLicense = await CostCenter.findOne({
@@ -64,7 +63,7 @@ const CostCenterService = {
 
 
         if (LicenseCostCenter.type == 'SERVER' && CostCentersLicense) {
-          throw new Error('tu licencia es tipo servidor por ende solo puede tener un centro de costo.')
+          return new HttpError(400, 'tu licencia es tipo servidor por ende solo puede tener un centro de costo.');
         }
   
         const createCostCenter = await CostCenter.create({
@@ -82,13 +81,11 @@ const CostCenterService = {
 
         return createCostCenter;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -103,17 +100,15 @@ const CostCenterService = {
       if (validatePermission) {
         const validate = CostCenterValidation.getCostCenter(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(400, validate.error);
         }
         const getCostCenter = await CostCenter.findByPk(id)
         return getCostCenter;
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpError(400, error.message);
     }
   },
   /**
@@ -128,7 +123,7 @@ const CostCenterService = {
         const validate = await CostCenterValidation.getCostCenter(id)
 
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpError(validate.error)
         }
 
         const getCostCenter = await CostCenter.findByPk(id);
@@ -138,12 +133,10 @@ const CostCenterService = {
         return getCostCenter;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error)
+      return new HttpError(400, error.message);
     }
   },
 
@@ -161,7 +154,7 @@ const CostCenterService = {
           const validate = await CostCenterValidation.getCostCenter(id)
     
           if (validate.error) {
-            throw new Error(validate.error)
+            return new HttpError(400, validate.error);
           }
           const newCostCenter = await CostCenter.update(
             {
@@ -172,12 +165,10 @@ const CostCenterService = {
     
           return newCostCenter;
         } 
-        return {
-          message: 'no tienes permisos para esta acción',
-          status: 401
-        }
+        const err = new HttpError(401, 'no tienes permisos para esta acción');
+        return err;
       } catch (error) {
-        throw new Error(error)
+        return new HttpError(400, error.message);
       }
     },
 
@@ -195,7 +186,7 @@ const CostCenterService = {
         const validateid = await CostCenterValidation.getCostCenter(id);
         
         if (validateid.error) {
-          throw new Error(validateid.error)
+          return new HttpError(400, validateid.message);
         }
   
         const newCostCenter = await CostCenter.update(
@@ -215,12 +206,10 @@ const CostCenterService = {
         return newCostCenter;
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 
@@ -231,12 +220,10 @@ const CostCenterService = {
         const CostCenters = await Pagination('CostCenters',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return CostCenters
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpError(400, error.message);
     }
   },
 }
