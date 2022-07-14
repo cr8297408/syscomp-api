@@ -74,7 +74,8 @@ const UserService = {
           profile: body.profile,
           avatarFile: body.avatarFile,
           typeUser: body.typeUser,
-          // createdBy: user.id
+          createdBy: user.id,
+          isActive: body.isActive
         });
 
         let contactLink = config.CONTACT_LINK;
@@ -201,6 +202,7 @@ const UserService = {
         const newUser = await User.update(
           {
             username: body.username,
+            email:body.email,
             firstName: body.firstName,
             lastName: body.lastName,
             roles: body.roles,
@@ -223,12 +225,15 @@ const UserService = {
     }
   },
 
-  async findPagination(bearerHeader,sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader,sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_USER'])
       if (validatePermission) {
-        // let query = `SELECT * FROM users WHERE username = ${wherecond}`
-        const Users = await Pagination('users',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM users WHERE username LIKE '%${wherecond}%' AND isActive = ${isActive} OR firstName LIKE '%${wherecond}%' AND isActive = ${isActive} OR lastName LIKE '%${wherecond}%' AND isActive = ${isActive} OR email LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const Users = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, Users);
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');

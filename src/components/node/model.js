@@ -36,6 +36,12 @@ const Node = sequelize.define('Node', {
   isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
   }
 },{
   tableName: 'nodes',

@@ -43,6 +43,12 @@ const CostCenter = sequelize.define('CostCenter', {
   isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
   }
 },{
   tableName: "costCenters",

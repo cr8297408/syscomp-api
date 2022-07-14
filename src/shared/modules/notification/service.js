@@ -3,7 +3,8 @@ const NotificationValidation = require('./validation');
 const Notification = require('./model');
 const Pagination = require('../../../shared/middlewares/pagination');
 const permissions = require('../../../shared/middlewares/permissions');
-const HttpError = require('../../response');
+const HttpResponse = require('../../response');
+const getUser = require('../../middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -46,7 +47,13 @@ const NotificationService = {
           return new HttpError(400, validate.error);
         }
   
-        const createNotification = await Notification.create(body);
+        const user = await getUser(bearerHeader);
+        const createNotification = await Notification.create({
+          message: body.message,
+          type: body.type,
+          isRead: body.isRead,
+          createdBy: user.id
+        });
         return new HttpResponse(200, 'notificacion creada');
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
@@ -108,11 +115,15 @@ const NotificationService = {
     }
   },
 
-  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_NOTIFICATION'])
       if (validatePermission) {
-        const Notifications = await Pagination('Notifications',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM notifications WHERE message LIKE '%${wherecond}%' AND isActive = ${isActive} OR typeNotification LIKE '%${wherecond}%' AND isActive = ${isActive} OR module LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const Notifications = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, Notifications);
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');

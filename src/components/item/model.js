@@ -21,6 +21,16 @@ const Item = sequelize.define('Item', {
   description: {
     type: DataTypes.STRING,
   },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
+  }
 },{
   tableName: 'items',
   timestamps: true

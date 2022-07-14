@@ -51,10 +51,10 @@ async function updateOne(req, res){
 
 async function findpagination(req, res){
   try {
-    const sizeAsNumber = Number(req.query.size);
-    const pageAsNumber = Number(req.query.page);
-    const where = req.body.where;
-    const Payments = await PaymentService.findPagination(req.headers['authorization'],sizeAsNumber, pageAsNumber, where);
+    const sizeAsNumber = Number(req.body.size);
+    const pageAsNumber = Number(req.body.page);
+    const {where, isActive} = req.body;
+    const Payments = await PaymentService.findPagination(req.headers['authorization'],sizeAsNumber, pageAsNumber, where, isActive);
     res.status(Payments.status).json(Payments.message)    
   } catch (error) {
       throw new Error(error.message)

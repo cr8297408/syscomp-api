@@ -4,6 +4,7 @@ const Client = require('./model');
 const Pagination = require('../../shared/middlewares/pagination')
 const permissions = require('../../shared/middlewares/permissions');
 const HttpResponse = require('../../shared/response');
+const getUser = require('../../shared/middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -47,6 +48,7 @@ const ClientService = {
           return new HttpResponse(400, validate.error);
         }
   
+        const user = await getUser(bearerHeader)
         const createClient = await Client.create({
           businessName: body.businessName,
           nit: body.nit,
@@ -58,6 +60,7 @@ const ClientService = {
           country: body.country,
           contactDate: body.contactDate,
           direction : body.direction,
+          createdBy: user.id
         });
         return new HttpResponse(201, 'usuario creado');
       } 
@@ -139,7 +142,7 @@ const ClientService = {
         if (validateid.error) {
           return new HttpResponse(400, validateid.error)
         }
-  
+        const user = await getUser(bearerHeader)
         const newClient = await Client.update(
           {
             businessName: body.businessName,
@@ -150,6 +153,8 @@ const ClientService = {
             country: body.country,
             contactDate: body.contactDate,
             direction : body.direction,
+            updatedBy: user.id,
+            isActive: body.isActive
           },
           {where: {id}}
         )
@@ -164,11 +169,15 @@ const ClientService = {
     }
   },
 
-  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_CLIENT'])
       if (validatePermission) {
-        const Clients = await Pagination('clients',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM clients WHERE businessName LIKE '%${wherecond}%' AND isActive = ${isActive} OR nit LIKE '%${wherecond}%' AND isActive = ${isActive} OR municipality LIKE '%${wherecond}%' AND isActive = ${isActive} OR department LIKE '%${wherecond}%' AND isActive = ${isActive} OR country LIKE '%${wherecond}%' AND isActive = ${isActive} OR email LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const Clients = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, Clients);
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');

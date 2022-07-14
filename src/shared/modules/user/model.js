@@ -44,7 +44,13 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
-  avatarFile: DataTypes.STRING
+  avatarFile: DataTypes.STRING,
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
+  }
 },{
   tableName: "users",
   timestamps: true

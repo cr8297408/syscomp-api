@@ -1,41 +1,42 @@
 'use strict';
-const {DataTypes, UUIDV4} = require('sequelize')
+
+const { DataTypes, UUIDV4 } = require('sequelize')
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('notifications', {
       id: {
         type: DataTypes.STRING,
         defaultValue: UUIDV4,
         primaryKey: true,
         allowNull: false,
       },
-      observations: {
+      UserId: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
-      amount: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-      },
-      date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      checked: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-      },
-      FactureId: {
-        type: DataTypes.STRING,
-        foreignkey: true,
         references: {
-          model: 'factures',
+          model: 'users', 
           key: 'id'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+        }
       },
+      message: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      isRead: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      type: {
+        type: DataTypes.ENUM('PERSONAL', 'BY_USER_POSITION', 'BY_TYPE', 'GROUP')
+      },
+      typeNotification: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      icon: {
+        type: DataTypes.STRING,
+      },
+      module: DataTypes.STRING,
       createdAt: {
         type: DataTypes.STRING,
         defaultValue: new Date(),
@@ -58,6 +59,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('notifications');
   }
 };

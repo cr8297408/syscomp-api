@@ -41,6 +41,16 @@ const License = sequelize.define('License', {
   isLifetime: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
   }
 },{
   tableName: 'licenses',

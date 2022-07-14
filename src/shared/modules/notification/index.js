@@ -42,10 +42,10 @@ async function deleteOne(req, res, next){
 
 async function findpagination(req, res){
   try {
-    const sizeAsNumber = Number(req.query.size);
-    const pageAsNumber = Number(req.query.page);
-    const where = req.body.where;
-    const Notifications = await NotificationService.findPagination(req.headers['authorization'],sizeAsNumber, pageAsNumber, where);
+    const sizeAsNumber = Number(req.body.size);
+    const pageAsNumber = Number(req.body.page);
+    const {where, isActive} = req.body;
+    const Notifications = await NotificationService.findPagination(req.headers['authorization'],sizeAsNumber, pageAsNumber, where, isActive);
     res.status(Notifications.status).json(Notifications.message)   
   } catch (error) {
     res.json(error.message)

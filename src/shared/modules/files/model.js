@@ -34,6 +34,10 @@ const File = sequelize.define('File', {
   description: {
     type: DataTypes.STRING,
   },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
   createdBy: {
     type: DataTypes.STRING,
   },

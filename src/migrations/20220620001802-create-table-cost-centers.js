@@ -63,6 +63,16 @@ module.exports = {
       updatedAt: {
         type: Sequelize.Sequelize.DataTypes.STRING,
         defaultValue: new Date(),
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      },
+      createdBy: {
+        type: DataTypes.STRING,
+      },
+      updatedBy: {
+        type: DataTypes.STRING,
       }
     });
   },

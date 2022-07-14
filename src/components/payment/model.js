@@ -23,6 +23,16 @@ const Payment = sequelize.define('Payment', {
   checked: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
   }
 },{
   tableName: 'payments',

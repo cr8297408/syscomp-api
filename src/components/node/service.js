@@ -6,6 +6,7 @@ const License = require('../license/model');
 const Pagination = require('../../shared/middlewares/pagination')
 const permissions = require('../../shared/middlewares/permissions');
 const HttpResponse = require('../../shared/response');
+const getUser = require('../../shared/middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -56,6 +57,7 @@ const NodeService = {
           new HttpResponse(400, 'referencia con centro de costo invalida...');
         }
         
+        const user = await getUser(bearerHeader)
 
         const createNode = await Node.create(
           {
@@ -66,7 +68,8 @@ const NodeService = {
             debit: body.debit ,
             isLifetime: body.isLifetime ,
             isActive: body.isActive ,
-            CostCenterId: body.CostCenterId, 
+            CostCenterId: body.CostCenterId,
+            createdBy: user.id 
           }
         );
         
@@ -149,6 +152,7 @@ const NodeService = {
           return new HttpResponse(400, validateid.error);
         }
 
+        const user = await getUser(bearerHeader)
         const newNode = await Node.update(
           {
             initDate: body.initDate ,
@@ -157,6 +161,8 @@ const NodeService = {
             debit: body.debit ,
             isLifetime: body.isLifetime ,
             isActive: body.isActive ,
+            updatedBy: user.id,
+            isActive: body.isActive
           },
           {where: {id}}
         )
@@ -171,11 +177,15 @@ const NodeService = {
     }
   },
 
-  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_NODE'])
       if (validatePermission) {
-        const Nodes = await Pagination('Nodes',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM nodes WHERE serialCost LIKE '%${wherecond}%' AND isActive = ${isActive} OR serial LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const Nodes = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, Nodes);
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');

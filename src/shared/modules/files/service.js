@@ -26,10 +26,10 @@ const FileService = {
         const Files = await File.findAll()
         return new HttpResponse(200, Files);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch(error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -45,7 +45,7 @@ const FileService = {
       if (validatePermission) {
         const validate = FileValidation.createFile(body);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
         const user = await getUser(bearerHeader);
         const createFile = await File.create({
@@ -65,11 +65,11 @@ const FileService = {
   
         return new HttpResponse(200, 'archivo subido');
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -84,15 +84,15 @@ const FileService = {
       if (validatePermission) {
         const validate = FileValidation.getFile(id);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
         const getFile = await File.findByPk(id)
         return new HttpResponse(200, getFile);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
   /**
@@ -107,7 +107,7 @@ const FileService = {
         const validate = await FileValidation.getFile(id)
 
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
 
         const getFile = await File.findByPk(id);
@@ -117,10 +117,10 @@ const FileService = {
         return new HttpResponse(200, 'archivo eliminado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -138,7 +138,7 @@ const FileService = {
         const validateid = await FileValidation.getFile(id);
         
         if (validateid.error) {
-          return new HttpError(400, validateid.error);
+          return new HttpResponse(400, validateid.error);
         }
   
         const newFile = await File.update(
@@ -150,7 +150,8 @@ const FileService = {
             bytes: body.bytes,
             storage: body.storage,
             status: body.status,
-            updatedBy: user.id
+            updatedBy: user.id,
+            isActive: body.isActive
           },
           {where: {id}}
         )
@@ -158,24 +159,28 @@ const FileService = {
         return new HttpResponse(200, 'informacion de archivo actualizada');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
-  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_FILE'])
       if (validatePermission) {
-        const Files = await Pagination('Files',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM files WHERE filename LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const Files = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, Files);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 }

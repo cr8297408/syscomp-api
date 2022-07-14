@@ -4,6 +4,7 @@ const ReportType = require('./model');
 const Pagination = require('../../middlewares/pagination')
 const permissions = require('../../middlewares/permissions');
 const HttpResponse = require('../../response');
+const getUser = require('../../middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -46,9 +47,11 @@ const ReportTypeService = {
           return new HttpResponse(400, validate.error);
         }
   
+        const user = await getUser(bearerHeader);
         const createReportType = await ReportType.create({
           name: body.name,
-          description: body.description 
+          description: body.description,
+          createdBy: user.id
         });
         return new HttpResponse(200, 'tipo de reporte agregado');
       } 
@@ -128,10 +131,13 @@ const ReportTypeService = {
           return new HttpResponse(400, validateid.error);
         }
   
+        const user = await getUser(bearerHeader);
         const newReportType = await ReportType.update(
           {
             name: body.name,
-            description: body.description 
+            description: body.description,
+            updatedBy: user.id,
+            isActive: body.isActive
           },
           {where: {id}}
         )
@@ -146,11 +152,15 @@ const ReportTypeService = {
     }
   },
 
-  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_REPORT_TYPE'])
       if (validatePermission) {
-        const ReportTypes = await Pagination('ReportTypes',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM reportTypes WHERE name LIKE '%${wherecond}%' AND isActive = ${isActive} OR description LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const ReportTypes = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, ReportTypes);
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');

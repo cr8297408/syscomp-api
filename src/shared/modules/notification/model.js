@@ -29,6 +29,16 @@ const Notification = sequelize.define('Notification', {
   icon: {
     type: DataTypes.STRING,
   },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
+  },
   module: DataTypes.STRING,
 },{
   tableName: "notifications",

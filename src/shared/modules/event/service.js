@@ -48,7 +48,18 @@ const EventService = {
           return new HttpResponse(400, validate.error);
         }
   
-        const createEvent = await Event.create(body);
+        const user = await getUser(bearerHeader);
+        const createEvent = await Event.create({
+          icon: body.icon,
+          subtitle: body.subtitle,
+          title: body.title,
+          finishDate: body.finishDate,
+          initDate: body.initDate,
+          description: body.description,
+          estate: body.estate,
+          createdBy: user.id
+        });
+
         return new HttpResponse(201, 'evento creado');
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');
@@ -126,7 +137,9 @@ const EventService = {
         if (validateid.error) {
           return new HttpResponse(400, validate.error);
         }
-  
+        
+        const user = await getUser(bearerHeader);
+        
         const newEvent = await Event.update(
           {
             icon: body.icon,
@@ -135,7 +148,9 @@ const EventService = {
             finishDate: body.finishDate,
             initDate: body.initDate,
             description: body.description,
-            estate: body.estate  
+            estate: body.estate,
+            updatedBy: user.id,
+            isActive: body.isActive
           },
           {where: {id}}
         )
@@ -150,11 +165,15 @@ const EventService = {
     }
   },
 
-  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_EVENT'])
       if (validatePermission) {
-        const Events = await Pagination('Events',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM events WHERE title LIKE '%${wherecond}%' AND isActive = ${isActive} OR subtitle LIKE '%${wherecond}%' AND isActive = ${isActive} OR description LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const Events = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, Events);
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');

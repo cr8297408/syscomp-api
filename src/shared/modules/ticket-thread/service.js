@@ -51,9 +51,15 @@ const TicketThreadService = {
         if (validate.error) {
           return new HttpResponse(400, validate.error);
         }
-        const ticketT = await TicketThread.create(body)
+        
         const user = await getUser(bearerHeader);
-
+        const ticketT = await TicketThread.create({
+          response: body.response,
+          date: body.date,
+          estate: body.estate,
+          SupportTicketId: body.SupportTicketId,
+          createdBy: user.id
+        })
         const userManager = await SupportTicket.findByPk(body.SupportTicketId);
 
         const emailManager = await User.findByPk(userManager.UserId);
@@ -145,11 +151,15 @@ const TicketThreadService = {
           return new HttpResponse(400, validateid.error);
         }
   
+        const user = await getUser(bearerHeader);
+
         const newTicketThread = await TicketThread.update(
           {
             response: body.respose, 
             fecha: body.date,
             estate:body.estate,
+            updatedBy: user.id,
+            isActive: body.isActive
           },
           {where: {id}}
         )
@@ -164,11 +174,15 @@ const TicketThreadService = {
     }
   },
 
-  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_TICKET_THREAD'])
       if (validatePermission) {
-        const TicketThreads = await Pagination('TicketThreads',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM ticketThreads WHERE response LIKE '%${wherecond}%' AND isActive = ${isActive} OR date LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const TicketThreads = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, TicketThreads);
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');

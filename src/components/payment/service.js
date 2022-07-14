@@ -4,6 +4,7 @@ const Payment = require('./model');
 const Pagination = require('../../shared/middlewares/pagination')
 const permissions = require('../../shared/middlewares/permissions');
 const HttpResponse = require('../../shared/response');
+const getUser = require('../../shared/middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -46,7 +47,15 @@ const PaymentService = {
           return new HttpResponse(400, validate.error);
         }
   
-        const createPayment = await Payment.create(body);
+        const user = await getUser(bearerHeader)
+        const createPayment = await Payment.create({
+          FactureId: body.FactureId,
+          observations: body.observations,
+          amount: body.amount,
+          date: body.date,
+          checked: body.checked,
+          createdBy: user.id
+        });
         return createPayment;
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');
@@ -125,12 +134,15 @@ const PaymentService = {
           return new HttpResponse(400, validateid.error);
         }
 
+        const user = await getUser(bearerHeader)
         const newPayment = await Payment.update(
           {
             observations: body.observations,
             amount: body.amount,
             date: body.date,
-            checked: body.checked
+            checked: body.checked,
+            updatedBy: user.id,
+            isActive: body.isActive
           },
           {where: {id}}
         )
@@ -145,11 +157,15 @@ const PaymentService = {
     }
   },
 
-  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_PAYMENT'])
       if (validatePermission) {
-        const Payments = await Pagination('Payments',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM payments WHERE observations LIKE '%${wherecond}%' AND isActive = ${isActive} OR FactureId LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const Payments = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, Payments);
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');

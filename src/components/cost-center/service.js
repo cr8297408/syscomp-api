@@ -7,6 +7,7 @@ const permissions = require('../../shared/middlewares/permissions');
 const { UUIDV4 } = require('sequelize');
 const Node = require('../node/model');
 const HttpResponse = require('../../shared/response');
+const getUser = require('../../shared/middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -65,7 +66,8 @@ const CostCenterService = {
         if (LicenseCostCenter.type == 'SERVER' && CostCentersLicense) {
           return new HttpResponse(400, 'tu licencia es tipo servidor por ende solo puede tener un centro de costo.');
         }
-  
+        
+        const user = await getUser(bearerHeader);
         const createCostCenter = await CostCenter.create({
           LicenseId: body.LicenseId,
           serial_license: LicenseCostCenter.serial,
@@ -77,6 +79,7 @@ const CostCenterService = {
           direction: body.direction ,
           isLifetime: body.isLifetime ,
           isActive: body.isActive ,
+          createdBy: user.id
         });
 
         return new HttpResponse(201, 'cost center creado');
@@ -188,17 +191,20 @@ const CostCenterService = {
         if (validateid.error) {
           return new HttpResponse(400, validateid.message);
         }
-  
+        
+        const user = await getUser(bearerHeader)
         const newCostCenter = await CostCenter.update(
           {
             name: body.name,
             initDate: body.initDate ,
             finishDate: body.finishDate ,
             price: body.price ,
-            debit: body.debit ,
-            direction: body.direction ,
-            isLifetime: body.isLifetime ,
-            isActive: body.isActive ,
+            debit: body.debit,
+            direction: body.direction,
+            isLifetime: body.isLifetime,
+            isActive: body.isActive,
+            updatedBy: user.id,
+            isActive: body.isActive
           },
           {where: {id}}
         )
@@ -213,11 +219,15 @@ const CostCenterService = {
     }
   },
 
-  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_COST_CENTER'])
       if (validatePermission) {
-        const CostCenters = await Pagination('CostCenters',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM costCenters WHERE name LIKE '%${wherecond}%' AND isActive = ${isActive} OR direction LIKE '%${wherecond}%' AND isActive = ${isActive} OR serial LIKE '%${wherecond}%' AND isActive = ${isActive} OR serial_license LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const CostCenters = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, CostCenters);
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');

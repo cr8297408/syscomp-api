@@ -53,10 +53,17 @@ const Client = sequelize.define('Client', {
     type: DataTypes.DATE,
     defaultValue: new Date()
   },
-  isActive:  {
+  isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
+  }
+
 },{
   tableName: "clients",
   timestamps: true

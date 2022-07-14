@@ -1,40 +1,39 @@
 'use strict';
-const {DataTypes, UUIDV4} = require('sequelize')
+const { DataTypes, UUIDV4 } = require('sequelize')
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('files', {
       id: {
         type: DataTypes.STRING,
         defaultValue: UUIDV4,
         primaryKey: true,
         allowNull: false,
       },
-      observations: {
+      filename: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      amount: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
-      },
-      date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      checked: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-      },
-      FactureId: {
+      url: {
         type: DataTypes.STRING,
-        foreignkey: true,
-        references: {
-          model: 'factures',
-          key: 'id'
-        },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
+      },
+      key: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      bytes: {
+        type: DataTypes.FLOAT
+      },
+      storage: {
+        type: DataTypes.ENUM('AWS', 'LOCAL', 'CLOUDINARY', 'OTHER'),
+        allowNull: false,
+      },
+      status: {
+        type: DataTypes.ENUM('UNUSED', 'PROCESSING', 'OK'),
+        allowNull: false,
+      },
+      description: {
+        type: DataTypes.STRING,
       },
       createdAt: {
         type: DataTypes.STRING,
@@ -58,6 +57,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('files');
   }
 };

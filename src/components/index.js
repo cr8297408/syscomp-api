@@ -11,10 +11,13 @@ const EventComponent = require('../shared/modules/event');
 const ReportTypeComponent = require('../shared/modules/report-type');
 const SupportTicketComponent = require('../shared/modules/support-ticket');
 const TicketThreadComponent = require('../shared/modules/ticket-thread');
+const FileComponent = require('../shared/modules/files');
+const NotificationComponent = require('../shared/modules/notification');
 
 
 module.exports = {
   ClientComponent,
+  NotificationComponent,
   UserComponent,
   AuthComponent,
   CostCenterComponent,
@@ -26,5 +29,6 @@ module.exports = {
   EventComponent,
   ReportTypeComponent,
   SupportTicketComponent,
-  TicketThreadComponent
+  TicketThreadComponent,
+  FileComponent
 }

@@ -4,6 +4,7 @@ const License = require('./model');
 const Pagination = require('../../shared/middlewares/pagination');
 const permissions = require('../../shared/middlewares/permissions');
 const HttpResponse = require('../../shared/response');
+const getUser = require('../../shared/middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -46,7 +47,20 @@ const LicenseService = {
         if (validate.error) {
           return new HttpResponse(400, validate.error);
         }
-        const createLicense = await License.create(body);
+
+        const user = await getUser(bearerHeader)
+
+        const createLicense = await License.create({
+          type: body.type,
+          description: body.description,
+          start_date: body.start_date,
+          expired_date: body.expired_date,
+          isActive: body.isActive,
+          isLifetime: body.isLifetime,
+          ClientId: body.ClientId,
+          price: body.price,
+          createdBy: user.id
+        });
         return new HttpResponse(200, 'licencia creada');
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');
@@ -125,6 +139,7 @@ const LicenseService = {
           return new HttpResponse(400, validateid.error);
         }
 
+        const user = await getUser(bearerHeader)
         const newLicense = await License.update(
           {
             type: body.type,
@@ -133,6 +148,8 @@ const LicenseService = {
             expired_date: body.expired_date,
             isActive: body.isActive,
             isLifetime: body.isLifetime,
+            updatedBy: user.id,
+            isActive: body.isActive
           },
           {where: {id}}
         )
@@ -147,11 +164,15 @@ const LicenseService = {
     }
   },
 
-  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond){
+  async findPagination(bearerHeader, sizeAsNumber, pageAsNumber, wherecond, isActive){
     try {
+      if(isActive == undefined || typeof(isActive) !== 'boolean'){
+        isActive = true
+      }
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_LICENSE'])
       if (validatePermission) {
-        const Licenses = await Pagination('Licenses',sequelize,sizeAsNumber, pageAsNumber, wherecond)
+        let query = `SELECT * FROM licenses WHERE description LIKE '%${wherecond}%' AND isActive = ${isActive} OR ClientId LIKE '%${wherecond}%' AND isActive = ${isActive}`
+        const Licenses = await Pagination(sequelize,sizeAsNumber, pageAsNumber, query)
         return new HttpResponse(200, Licenses);
       } 
       const err = new HttpResponse(401, 'no tienes permisos para esta acción');

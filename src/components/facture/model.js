@@ -36,6 +36,16 @@ const Facture = sequelize.define('Facture', {
   estate: {
     type: DataTypes.ENUM('PAID_OUT', 'IN_DEBT', 'PENDING'),
     defaultValue: 'PENDING'
+  },
+  isActive: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
+  createdBy: {
+    type: DataTypes.STRING,
+  },
+  updatedBy: {
+    type: DataTypes.STRING,
   }
 },{
   tableName: "factures",
