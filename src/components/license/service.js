@@ -3,7 +3,7 @@ const LicenseValidation = require('./validation');
 const License = require('./model');
 const Pagination = require('../../shared/middlewares/pagination');
 const permissions = require('../../shared/middlewares/permissions');
-const HttpError = require('../../shared/errors');
+const HttpResponse = require('../../shared/response');
 
 sequelize = db.sequelize;
 
@@ -22,12 +22,12 @@ const LicenseService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_LICENSE'])
       if (validatePermission) {
         const Licenses = await License.findAll()
-        return Licenses;
+        return new HttpResponse(200, Licenses);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch(error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -44,17 +44,16 @@ const LicenseService = {
         console.log('validate pass');
         const validate = LicenseValidation.createLicense(body);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
-        console.log(body);
         const createLicense = await License.create(body);
-        return createLicense;
+        return new HttpResponse(200, 'licencia creada');
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -69,15 +68,15 @@ const LicenseService = {
       if (validatePermission) {
         const validate = LicenseValidation.getLicense(id);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
         const getLicense = await License.findByPk(id)
-        return getLicense;
+        return new HttpResponse(200, getLicense);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
   /**
@@ -92,20 +91,20 @@ const LicenseService = {
         const validate = await LicenseValidation.getLicense(id)
 
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
 
         const getLicense = await License.findByPk(id);
         
         await getLicense.destroy()
 
-        return getLicense;
+        return new HttpResponse(200, 'licencia eliminada');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -123,7 +122,7 @@ const LicenseService = {
         const validateid = await LicenseValidation.getLicense(id);
         
         if (validateid.error) {
-          return new HttpError(400, validateid.error);
+          return new HttpResponse(400, validateid.error);
         }
 
         const newLicense = await License.update(
@@ -138,13 +137,13 @@ const LicenseService = {
           {where: {id}}
         )
   
-        return newLicense;
+        return new HttpResponse(200, 'licencia actualizada');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -153,12 +152,12 @@ const LicenseService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_LICENSE'])
       if (validatePermission) {
         const Licenses = await Pagination('Licenses',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return Licenses
+        return new HttpResponse(200, Licenses);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 }

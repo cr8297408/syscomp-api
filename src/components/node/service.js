@@ -5,7 +5,7 @@ const CostCenter = require('../cost-center/model');
 const License = require('../license/model');
 const Pagination = require('../../shared/middlewares/pagination')
 const permissions = require('../../shared/middlewares/permissions');
-const HttpError = require('../../shared/errors');
+const HttpResponse = require('../../shared/response');
 
 sequelize = db.sequelize;
 
@@ -24,12 +24,12 @@ const NodeService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_NODE'])
       if (validatePermission) {
         const Nodes = await Node.findAll()
-        return Nodes;
+        return new HttpResponse(200, Nodes);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch(error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -45,7 +45,7 @@ const NodeService = {
       if (validatePermission) {
         const validate = NodeValidation.createNode(body);
         if (validate.error) {
-          new HttpError(400, validate.error)
+          new HttpResponse(400, validate.error)
         }
 
         const costCenterNode = await CostCenter.findByPk(body.CostCenterId);
@@ -53,7 +53,7 @@ const NodeService = {
         const LicenseCostCenter = await License.findByPk(costCenterNode.LicenseId);
         
         if (!costCenterNode) {
-          new HttpError(400, 'referencia con centro de costo invalida...');
+          new HttpResponse(400, 'referencia con centro de costo invalida...');
         }
         
 
@@ -71,13 +71,13 @@ const NodeService = {
         );
         
 
-        return createNode;
+        return new HttpResponse(201, 'nodo creado');
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -92,15 +92,15 @@ const NodeService = {
       if (validatePermission) {
         const validate = NodeValidation.getNode(id);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
         const getNode = await Node.findByPk(id)
-        return getNode;
+        return new HttpResponse(200, getNode);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
   /**
@@ -115,20 +115,20 @@ const NodeService = {
         const validate = await NodeValidation.getNode(id)
 
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
 
         const getNode = await Node.findByPk(id);
         
         await getNode.destroy()
 
-        return getNode;
+        return new HttpResponse(200, getNode);
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -146,7 +146,7 @@ const NodeService = {
         const validateid = await NodeValidation.getNode(id);
         
         if (validateid.error) {
-          return new HttpError(400, validateid.error);
+          return new HttpResponse(400, validateid.error);
         }
 
         const newNode = await Node.update(
@@ -161,13 +161,13 @@ const NodeService = {
           {where: {id}}
         )
   
-        return newNode;
+        return new HttpResponse(200, 'nodo actualizado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -176,12 +176,12 @@ const NodeService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_NODE'])
       if (validatePermission) {
         const Nodes = await Pagination('Nodes',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return Nodes
+        return new HttpResponse(200, Nodes);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   }
 }

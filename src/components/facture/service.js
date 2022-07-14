@@ -3,7 +3,7 @@ const FactureValidation = require('./validation');
 const Facture = require('./model');
 const Pagination = require('../../shared/middlewares/pagination');
 const permissions = require('../../shared/middlewares/permissions');
-const HttpError = require('../../shared/errors');
+const HttpResponse = require('../../shared/response');
 
 sequelize = db.sequelize;
 
@@ -22,12 +22,12 @@ const FactureService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_FACTURE'])
       if (validatePermission) {
         const Factures = await Facture.findAll()
-        return Factures;
+        return new HttpResponse(200, Factures);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch(error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -43,7 +43,7 @@ const FactureService = {
       if (validatePermission) {
         const validate = FactureValidation.createFacture(body);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
 
         let data = {
@@ -59,13 +59,13 @@ const FactureService = {
         }
   
         const createFacture = await Facture.create(data);
-        return createFacture;
+        return new HttpResponse(200, 'factura creada');
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -80,15 +80,15 @@ const FactureService = {
       if (validatePermission) {
         const validate = FactureValidation.getFacture(id);
         if (validate.error) {
-          new HttpError(400, validate.error)
+          new HttpResponse(400, validate.error)
         }
         const getFacture = await Facture.findByPk(id)
-        return getFacture;
+        return new HttpResponse(200, getFacture);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
   /**
@@ -103,20 +103,20 @@ const FactureService = {
         const validate = await FactureValidation.getFacture(id)
 
         if (validate.error) {
-          new HttpError(400, validate.error)
+          new HttpResponse(400, validate.error)
         }
 
         const getFacture = await Facture.findByPk(id);
         
         await getFacture.destroy()
 
-        return getFacture;
+        return new HttpResponse(200, 'factura eliminada');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -134,7 +134,7 @@ const FactureService = {
         const validateid = await FactureValidation.getFacture(id);
         
         if (validateid.error) {
-          return new HttpError(400, validateid.error);
+          return new HttpResponse(400, validateid.error);
         }
   
         const newFacture = await Facture.update(
@@ -150,13 +150,13 @@ const FactureService = {
           {where: {id}}
         )
   
-        return newFacture;
+        return new HttpResponse(200, 'factura actualizada');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -165,12 +165,12 @@ const FactureService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_COST_CENTER'])
       if (validatePermission) {
         const Factures = await Pagination('Factures',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return Factures
+        return new HttpResponse(200, Factures);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 }

@@ -3,7 +3,7 @@ const ReportTypeValidation = require('./validation');
 const ReportType = require('./model');
 const Pagination = require('../../middlewares/pagination')
 const permissions = require('../../middlewares/permissions');
-const HttpError = require('../../errors');
+const HttpResponse = require('../../response');
 
 sequelize = db.sequelize;
 
@@ -22,12 +22,12 @@ const ReportTypeService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_REPORT_TYPE'])
       if (validatePermission) {
         const ReportTypes = await ReportType.findAll()
-        return ReportTypes;
+        return new HttpResponse(200, ReportTypes);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch(error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -43,20 +43,20 @@ const ReportTypeService = {
       if (validatePermission) {
         const validate = ReportTypeValidation.createReportType(body);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
   
         const createReportType = await ReportType.create({
           name: body.name,
           description: body.description 
         });
-        return createReportType;
+        return new HttpResponse(200, 'tipo de reporte agregado');
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -71,15 +71,15 @@ const ReportTypeService = {
       if (validatePermission) {
         const validate = ReportTypeValidation.getReportType(id);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
         const getReportType = await ReportType.findByPk(id)
-        return getReportType;
+        return new HttpResponse(200, getReportType);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
   /**
@@ -94,20 +94,20 @@ const ReportTypeService = {
         const validate = await ReportTypeValidation.getReportType(id)
 
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
 
         const getReportType = await ReportType.findByPk(id);
         
         await getReportType.destroy()
 
-        return getReportType;
+        return new HttpResponse(200, 'tipo de reporte eliminado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -125,7 +125,7 @@ const ReportTypeService = {
         const validateid = await ReportTypeValidation.getReportType(id);
         
         if (validateid.error) {
-          return new HttpError(400, validateid.error);
+          return new HttpResponse(400, validateid.error);
         }
   
         const newReportType = await ReportType.update(
@@ -136,13 +136,13 @@ const ReportTypeService = {
           {where: {id}}
         )
   
-        return newReportType;
+        return new HttpResponse(200, 'tipo de reporte actualizado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -151,12 +151,12 @@ const ReportTypeService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_REPORT_TYPE'])
       if (validatePermission) {
         const ReportTypes = await Pagination('ReportTypes',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return ReportTypes
+        return new HttpResponse(200, ReportTypes);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 }

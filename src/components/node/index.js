@@ -4,7 +4,7 @@ const NodeService = require('./service');
 async function findAll(req, res, next) {
   try {
     const Nodes = await NodeService.findAll(req.headers['authorization'])
-    res.json(Nodes)
+    res.status(Nodes.status).json(Nodes.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
 async function create(req, res, next){
   try {
     const getNode = await NodeService.create(req.headers['authorization'],req.body);
-    res.json(getNode)
+    res.status(getNode.status).json(getNode.message)
   
   } catch (error) {
     res.json(error.message)
@@ -24,7 +24,7 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getNode = await NodeService.findOne(req.headers['authorization'],req.params.id)
-    res.json(getNode)
+    res.status(getNode.status).json(getNode.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -34,7 +34,7 @@ async function deleteOne(req, res, next){
   try {
     const Node = await NodeService.delete(req.headers['authorization'],req.params.id)
 
-    res.json(Node)
+    res.status(Node.status).json(Node.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -43,7 +43,7 @@ async function deleteOne(req, res, next){
 async function updateOne(req, res){
   try {
     const Node = await NodeService.update(req.headers['authorization'],req.params.id, req.body)
-    res.json(Node)
+    res.status(Node.status).json(Node.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -55,7 +55,7 @@ async function findpagination(req, res){
     const pageAsNumber = Number(req.query.page);
     const where = req.body.where;
     const Nodes = await NodeService.findPagination(req.headers['authorization'],sizeAsNumber, pageAsNumber, where);
-    res.json(Nodes)    
+    res.status(Nodes.status).json(Nodes.message)    
   } catch (error) {
       throw new Error(error.message)
   }

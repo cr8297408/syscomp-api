@@ -3,7 +3,7 @@ const SupportTicketValidation = require('./validation');
 const SupportTicket = require('./model');
 const Pagination = require('../../middlewares/pagination');
 const permissions = require('../../middlewares/permissions');
-const HttpError = require('../../errors');
+const HttpResponse = require('../../response');
 
 sequelize = db.sequelize;
 
@@ -22,12 +22,12 @@ const SupportTicketService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_SUPPORT_TICKET'])
       if (validatePermission) {
         const SupportTickets = await SupportTicket.findAll()
-        return SupportTickets;
+        return new HttpResponse(200, SupportTickets);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch(error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -43,17 +43,17 @@ const SupportTicketService = {
       if (validatePermission) {
         const validate = SupportTicketValidation.createSupportTicket(body);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
   
         const createSupportTicket = await SupportTicket.create(body);
-        return createSupportTicket;
+        return new HttpResponse(200, 'ticket de soporte creado');
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -68,15 +68,15 @@ const SupportTicketService = {
       if (validatePermission) {
         const validate = SupportTicketValidation.getSupportTicket(id);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
         const getSupportTicket = await SupportTicket.findByPk(id)
-        return getSupportTicket;
+        return new HttpResponse(200, getSupportTicket);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
   /**
@@ -91,20 +91,20 @@ const SupportTicketService = {
         const validate = await SupportTicketValidation.getSupportTicket(id)
 
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
 
         const getSupportTicket = await SupportTicket.findByPk(id);
         
         await getSupportTicket.destroy()
 
-        return getSupportTicket;
+        return new HttpResponse(200, 'ticket de soporte eliminado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -122,7 +122,7 @@ const SupportTicketService = {
         const validateid = await SupportTicketValidation.getSupportTicket(id);
         
         if (validateid.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
 
         const newSupportTicket = await SupportTicket.update(
@@ -136,13 +136,13 @@ const SupportTicketService = {
           {where: {id}}
         )
   
-        return newSupportTicket;
+        return new HttpResponse(200, 'ticket de soporte actualizado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -151,12 +151,12 @@ const SupportTicketService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_SUPPORT_TICKET'])
       if (validatePermission) {
         const SupportTickets = await Pagination('SupportTickets',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return SupportTickets
+        return new HttpResponse(200, SupportTickets);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 }

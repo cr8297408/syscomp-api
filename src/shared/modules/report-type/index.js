@@ -4,7 +4,7 @@ const ReportTypeService = require('./service');
 async function findAll(req, res, next) {
   try {
     const ReportTypes = await ReportTypeService.findAll(req.headers['authorization'])
-    res.json(ReportTypes)
+    res.status(ReportTypes.status).json(ReportTypes.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
 async function create(req, res, next){
   try {
     const getReportType = await ReportTypeService.create(req.headers['authorization'],req.body);
-    res.json(getReportType)
+    res.status(getReportType.status).json(getReportType.message)
   
   } catch (error) {
     res.json(error.message)
@@ -24,7 +24,7 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getReportType = await ReportTypeService.findOne(req.headers['authorization'],req.params.id)
-    res.json(getReportType)
+    res.status(getReportType.status).json(getReportType.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -34,7 +34,7 @@ async function deleteOne(req, res, next){
   try {
     const ReportType = await ReportTypeService.delete(req.headers['authorization'],req.params.id)
 
-    res.json(ReportType)
+    res.status(ReportType.status).json(ReportType.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -43,7 +43,7 @@ async function deleteOne(req, res, next){
 async function updateOne(req, res){
   try {
     const ReportType = await ReportTypeService.update(req.headers['authorization'],req.params.id, req.body)
-    res.json(ReportType)
+    res.status(ReportType.status).json(ReportType.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -55,9 +55,9 @@ async function findpagination(req, res){
     const pageAsNumber = Number(req.query.page);
     const where = req.body.where;
     const ReportTypes = await ReportTypeService.findPagination(req.headers['authorization'],sizeAsNumber, pageAsNumber, where);
-    res.json(ReportTypes)    
+    res.status(ReportTypes.status).json(ReportTypes.message)    
   } catch (error) {
-      throw new Error(error.message)
+    res.json(error.message)
   }
 }
 

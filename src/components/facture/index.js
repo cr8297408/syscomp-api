@@ -4,7 +4,7 @@ const FactureService = require('./service');
 async function findAll(req, res, next) {
   try {
     const Factures = await FactureService.findAll(req.headers['authorization'])
-    res.json(Factures)
+    res.status(Factures.status).json(Factures.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
 async function create(req, res, next){
   try {
     const getFacture = await FactureService.create(req.headers['authorization'],req.body);
-    res.json(getFacture)
+    res.status(getFacture.status).json(getFacture.message)
   
   } catch (error) {
     res.json(error.message)
@@ -24,7 +24,7 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getFacture = await FactureService.findOne(req.headers['authorization'],req.params.id)
-    res.json(getFacture)
+    res.status(getFacture.status).json(getFacture.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -34,7 +34,7 @@ async function deleteOne(req, res, next){
   try {
     const Facture = await FactureService.delete(req.headers['authorization'],req.params.id)
 
-    res.json(Facture)
+    res.status(Facture.status).json(Facture.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -43,7 +43,7 @@ async function deleteOne(req, res, next){
 async function updateOne(req, res){
   try {
     const Facture = await FactureService.update(req.headers['authorization'],req.params.id, req.body)
-    res.json(Facture)
+    res.status(Facture.status).json(Facture.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -55,7 +55,7 @@ async function findpagination(req, res){
     const pageAsNumber = Number(req.query.page);
     const where = req.body.where;
     const Factures = await FactureService.findPagination(req.headers['authorization'],sizeAsNumber, pageAsNumber, where);
-    res.json(Factures)    
+    res.status(Factures.status).json(Factures.message)    
   } catch (error) {
       throw new Error(error.message)
   }

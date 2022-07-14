@@ -2,7 +2,8 @@ const db = require('../../config/connection/connectBd');
 const __name__Validation = require('./validation');
 const __name__ = require('./model');
 const Pagination = require('../../shared/middlewares/pagination')
-const permissions = require('../../shared/middlewares/permissions')
+const permissions = require('../../shared/middlewares/permissions');
+const HttpResponse = require('../../shared/response');
 
 sequelize = db.sequelize;
 
@@ -21,14 +22,12 @@ const __name__Service = {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL___name__'])
       if (validatePermission) {
         const __name__s = await __name__.findAll()
-        return __name__s;
+        return new HttpResponse(200, __name__s);
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
+      return err;
     } catch(error) {
-      throw new Error(error.message)
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -44,19 +43,29 @@ const __name__Service = {
       if (validatePermission) {
         const validate = __name__Validation.create__name__(body);
         if (validate.error) {
-          throw new Error(validate.error)
+          console.log(new HttpResponse(400, validate.error));
+          return new HttpResponse(400, validate.error);
         }
   
-        const create__name__ = await __name__.create(body);
-        return create__name__;
+        const create__name__ = await __name__.create({
+          businessName: body.businessName,
+          nit: body.nit,
+          email: body.email,
+          repLegalContact: body.repLegalContact,
+          phoneNumber: body.phoneNumber,
+          municipality: body.municipality,
+          department: body.department,
+          country: body.country,
+          contactDate: body.contactDate,
+          direction : body.direction,
+        });
+        return new HttpResponse(201, 'usuario creado');
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
+      return err;
       
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpResponse(400, error.errors[0].message);
     }
   },
 
@@ -71,17 +80,15 @@ const __name__Service = {
       if (validatePermission) {
         const validate = __name__Validation.get__name__(id);
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpResponse(400, validate.error);
         }
-        const get__name__ = await __name__.findByPk(id)
-        return get__name__;
+        const get__name__ = await __name__.findByPk(id);
+        return new HttpResponse(200, get__name__);
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error.message)
+      return new HttpResponse(400, error.message);
     }
   },
   /**
@@ -96,22 +103,23 @@ const __name__Service = {
         const validate = await __name__Validation.get__name__(id)
 
         if (validate.error) {
-          throw new Error(validate.error)
+          return new HttpResponse(400, validate.error);
         }
 
-        const get__name__ = await __name__.findByPk(id);
-        
-        await get__name__.destroy()
-
-        return get__name__;
+        const newUser = await __name__.update(
+          {
+            isActive: false
+          },
+          {where: {id}}
+        )
+  
+        return new HttpResponse(200, 'usuario eliminado');
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      throw new Error(error)
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -129,27 +137,30 @@ const __name__Service = {
         const validateid = await __name__Validation.get__name__(id);
         
         if (validateid.error) {
-          throw new Error(validateid.error)
+          return new HttpResponse(400, validateid.error)
         }
   
-
         const new__name__ = await __name__.update(
           {
-            name: body.name,
-            accountingAccount: body.accountingAccount 
+            businessName: body.businessName,
+            repLegalContact: body.repLegalContact,
+            phoneNumber: body.phoneNumber,
+            municipality: body.municipality,
+            department: body.department,
+            country: body.country,
+            contactDate: body.contactDate,
+            direction : body.direction,
           },
           {where: {id}}
         )
   
-        return new__name__;
+        return new HttpResponse(200, 'usuario modificado');
         
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-      
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -158,14 +169,12 @@ const __name__Service = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION___name__'])
       if (validatePermission) {
         const __name__s = await Pagination('__name__s',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return __name__s
+        return new HttpResponse(200, __name__s);
       } 
-      return {
-        message: 'no tienes permisos para esta acción',
-        status: 401
-      }
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
+      return err;
     } catch (error) {
-        throw new Error(error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 }

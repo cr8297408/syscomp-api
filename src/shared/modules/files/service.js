@@ -5,6 +5,7 @@ const Pagination = require('../../middlewares/pagination');
 const permissions = require('../../middlewares/permissions');
 const FileAwsService = require('./aws-cloud-service');
 const getUser = require('../../middlewares/getUser');
+const HttpResponse = require('../../response');
 
 sequelize = db.sequelize;
 
@@ -23,7 +24,7 @@ const FileService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_FILE'])
       if (validatePermission) {
         const Files = await File.findAll()
-        return Files;
+        return new HttpResponse(200, Files);
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
       return err;
@@ -62,7 +63,7 @@ const FileService = {
           const uploadAws = FileAwsService.uploadFile(path, originalname)
         }
   
-        return createFile;
+        return new HttpResponse(200, 'archivo subido');
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
       return err;
@@ -86,7 +87,7 @@ const FileService = {
           return new HttpError(400, validate.error);
         }
         const getFile = await File.findByPk(id)
-        return getFile;
+        return new HttpResponse(200, getFile);
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
       return err;
@@ -113,7 +114,7 @@ const FileService = {
         
         await getFile.destroy()
 
-        return getFile;
+        return new HttpResponse(200, 'archivo eliminado');
         
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
@@ -137,7 +138,7 @@ const FileService = {
         const validateid = await FileValidation.getFile(id);
         
         if (validateid.error) {
-          return new HttpError(400, validateID.error);
+          return new HttpError(400, validateid.error);
         }
   
         const newFile = await File.update(
@@ -154,7 +155,7 @@ const FileService = {
           {where: {id}}
         )
   
-        return newFile;
+        return new HttpResponse(200, 'informacion de archivo actualizada');
         
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
@@ -169,7 +170,7 @@ const FileService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_FILE'])
       if (validatePermission) {
         const Files = await Pagination('Files',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return Files
+        return new HttpResponse(200, Files);
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
       return err;

@@ -3,7 +3,7 @@ const ItemValidation = require('./validation');
 const Item = require('./model');
 const Pagination = require('../../shared/middlewares/pagination');
 const permissions = require('../../shared/middlewares/permissions');
-const HttpError = require('../../shared/errors');
+const HttpResponse = require('../../shared/response');
 
 sequelize = db.sequelize;
 
@@ -22,12 +22,12 @@ const ItemService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_ITEM'])
       if (validatePermission) {
         const Items = await Item.findAll()
-        return Items;
+        return new HttpResponse(200, Items);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch(error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -43,17 +43,17 @@ const ItemService = {
       if (validatePermission) {
         const validate = ItemValidation.createItem(body);
         if (validate.error) {
-          new HttpError(400, validate.error)
+          return new HttpResponse(400, validate.error)
         }
   
         const createItem = await Item.create(body);
-        return createItem;
+        return new HttpResponse(200, 'item creado');
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -68,15 +68,15 @@ const ItemService = {
       if (validatePermission) {
         const validate = ItemValidation.getItem(id);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
         const getItem = await Item.findByPk(id)
-        return getItem;
+        return new HttpResponse(200, getItem);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
   /**
@@ -91,20 +91,20 @@ const ItemService = {
         const validate = await ItemValidation.getItem(id)
 
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
 
         const getItem = await Item.findByPk(id);
         
         await getItem.destroy()
 
-        return getItem;
+        return new HttpResponse(200, 'item eliminado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -122,7 +122,7 @@ const ItemService = {
         const validateid = await ItemValidation.getItem(id);
         
         if (validateid.error) {
-          return new HttpError(400, validateid.error);
+          return new HttpResponse(400, validateid.error);
         }
   
         const newItem = await Item.update(
@@ -135,13 +135,13 @@ const ItemService = {
           {where: {id}}
         )
   
-        return newItem;
+        return new HttpResponse(200, 'item actualizado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -150,12 +150,12 @@ const ItemService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_ITEM'])
       if (validatePermission) {
         const Items = await Pagination('Items',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return Items
+        return new HttpResponse(200, Items);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 }

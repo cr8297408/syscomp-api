@@ -8,7 +8,7 @@ const config = require('../../../config/env');
 const getUser = require('../../middlewares/getUser');
 const sendMail = require('../../resources/send-mail');
 const {TemplateSign} = require('../../resources/getTemplate');
-const HttpError = require('../../errors');
+const HttpResponse = require('../../response');
 
 sequelize = db.sequelize;
 
@@ -22,7 +22,7 @@ const AuthService = {
     try {
       const validate = AuthValidation.getAuth(body);
       if (validate.error) {
-        return new HttpError(400, validate.error);
+        return new HttpResponse(400, validate.error);
       }
 
       const user = await User.findOne({
@@ -30,11 +30,11 @@ const AuthService = {
       })
 
       if (!user) {
-        return new HttpError(400, 'credenciales incorrectas');
+        return new HttpResponse(400, 'credenciales incorrectas');
       }
       const result = bcrypt.compareSync(body.password, user.password);
       if (!result) {
-        return new HttpError(400, 'credenciales incorrectas');
+        return new HttpResponse(400, 'credenciales incorrectas');
       }
       const dataToken = {
         id : user.id,
@@ -44,10 +44,10 @@ const AuthService = {
       }
 
       const token = jsonwebtoken.sign({dataToken}, config.JWT_SECRET);
-      return token;
+      return new HttpResponse(200, token);
 
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -57,7 +57,7 @@ const AuthService = {
       const comparePass = bcrypt.compareSync(body.oldPassword,user.password);
       console.log(comparePass);
       if(body.email !== user.email || !comparePass){
-        return new HttpError(400, 'credenciales incorrectas');
+        return new HttpResponse(400, 'credenciales incorrectas');
       }
 
       const changePassword = await User.update({
@@ -68,10 +68,10 @@ const AuthService = {
         }
       })
 
-      return changePassword;
+      return new HttpResponse(200, 'contraseña cambiada');
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -85,7 +85,7 @@ const AuthService = {
       })
 
       if (!user) {
-        return new HttpError(400, 'credenciales incorrectas');
+        return new HttpResponse(400, 'credenciales incorrectas');
       }
 
       const dataToken = {
@@ -109,10 +109,10 @@ const AuthService = {
       const html = TemplateSign(textPrincipal, user.username, url, contactLink)
       await sendMail('syscomp', emailFrom, emailTo, subject,html)
 
-      return message;
+      return new HttpResponse(200, 'revisa tu correo');
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -127,10 +127,10 @@ const AuthService = {
         where: {id: user.dataValues.id}
       })
 
-      return changePassword;
+      return new HttpResponse(200, 'contraseña cambiada');
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
   
@@ -138,11 +138,11 @@ const AuthService = {
     try {
       const user = await getUser(bearerHeader);
       if (!user) {
-        return new HttpError(400, 'token invalido');
+        return new HttpResponse(400, 'token invalido');
       }
-      return user;
+      return new HttpResponse(200, user);
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   }
 }

@@ -4,7 +4,7 @@ const CostCenterService = require('./service');
 async function findAll(req, res, next) {
   try {
     const CostCenters = await CostCenterService.findAll(req.headers['authorization'])
-    res.json(CostCenters)
+    res.status(CostCenters.status).json(CostCenters.message)
   } catch (error) {
     res.json(error.message)
   }
@@ -13,7 +13,7 @@ async function findAll(req, res, next) {
 async function create(req, res, next){
   try {
     const getCostCenter = await CostCenterService.create(req.headers['authorization'],req.body);
-    res.json(getCostCenter)
+    res.status(getCostCenter.status).json(getCostCenter)
   
   } catch (error) {
     res.json(error.message)
@@ -24,7 +24,7 @@ async function findOne(req, res, next){
   try {
     console.log(req.params.id)
     const getCostCenter = await CostCenterService.findOne(req.headers['authorization'],req.params.id)
-    res.json(getCostCenter)
+    res.status(getCostCenter.status).json(getCostCenter)
   } catch (error) {
     res.json(error.message)
   }
@@ -34,7 +34,7 @@ async function deleteOne(req, res, next){
   try {
     const CostCenter = await CostCenterService.delete(req.headers['authorization'],req.params.id)
 
-    res.json(CostCenter)
+    res.status(CostCenter.status).json(CostCenter)
   } catch (error) {
     res.json(error.message)
   }
@@ -43,7 +43,7 @@ async function deleteOne(req, res, next){
 async function updateOne(req, res){
   try {
     const CostCenter = await CostCenterService.update(req.headers['authorization'],req.params.id, req.body)
-    res.json(CostCenter)
+    res.status(CostCenter.status).json(CostCenter)
   } catch (error) {
     res.json(error.message)
   }
@@ -55,7 +55,7 @@ async function findpagination(req, res){
     const pageAsNumber = Number(req.query.page);
     const where = req.body.where;
     const CostCenters = await CostCenterService.findPagination(req.headers['authorization'],sizeAsNumber, pageAsNumber, where);
-    res.json(CostCenters)    
+    res.status(CostCenters.status).json(CostCenters)    
   } catch (error) {
       throw new Error(error.message)
   }
@@ -65,7 +65,7 @@ async function activateCostCenter(req, res){
   try {
     const getCostCenter = await CostCenterService.activateCostCenter(req.headers['authorization'],req.params.id)
 
-    res.json(getCostCenter)
+    res.status(getCostCenter.status).json(getCostCenter)
   } catch (error) {
     res.json(error.message)
   }

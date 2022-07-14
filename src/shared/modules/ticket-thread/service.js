@@ -9,7 +9,7 @@ const config = require('../../../config/env');
 const getUser = require('../../middlewares/getUser');
 const SupportTicket = require('../support-ticket/model');
 const User = require('../user/model');
-const HttpError = require('../../errors');
+const HttpResponse = require('../../response');
 
 sequelize = db.sequelize;
 
@@ -28,12 +28,12 @@ const TicketThreadService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_TICKET_THREAD'])
       if (validatePermission) {
         const TicketThreads = await TicketThread.findAll()
-        return TicketThreads;
+        return new HttpResponse(200, TicketThreads);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch(error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -49,7 +49,7 @@ const TicketThreadService = {
       if (validatePermission) {
         const validate = TicketThreadValidation.createTicketThread(body);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
         const ticketT = await TicketThread.create(body)
         const user = await getUser(bearerHeader);
@@ -67,13 +67,13 @@ const TicketThreadService = {
         const html = TemplateSign(textPrincipal, body.username, contactLink)
         await sendMail('syscomp', emailFrom, emailTo, subject,html)
 
-        return ticketT;
+        return new HttpResponse(200, 'hilo de ticket creado');
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -88,15 +88,15 @@ const TicketThreadService = {
       if (validatePermission) {
         const validate = TicketThreadValidation.getTicketThread(id);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
         const getTicketThread = await TicketThread.findByPk(id)
-        return getTicketThread;
+        return new HttpResponse(200, getTicketThread);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
   /**
@@ -111,20 +111,20 @@ const TicketThreadService = {
         const validate = await TicketThreadValidation.getTicketThread(id)
 
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
 
         const getTicketThread = await TicketThread.findByPk(id);
         
         await getTicketThread.destroy()
 
-        return getTicketThread;
+        return new HttpResponse(200, 'hilo de ticket eliminado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -142,7 +142,7 @@ const TicketThreadService = {
         const validateid = await TicketThreadValidation.getTicketThread(id);
         
         if (validateid.error) {
-          return new HttpError(400, validateid.error);
+          return new HttpResponse(400, validateid.error);
         }
   
         const newTicketThread = await TicketThread.update(
@@ -154,13 +154,13 @@ const TicketThreadService = {
           {where: {id}}
         )
   
-        return newTicketThread;
+        return new HttpResponse(200, 'hilo de ticket actualizado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -169,12 +169,12 @@ const TicketThreadService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_TICKET_THREAD'])
       if (validatePermission) {
         const TicketThreads = await Pagination('TicketThreads',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return TicketThreads
+        return new HttpResponse(200, TicketThreads);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 }

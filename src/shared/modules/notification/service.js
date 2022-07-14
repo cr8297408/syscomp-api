@@ -3,7 +3,7 @@ const NotificationValidation = require('./validation');
 const Notification = require('./model');
 const Pagination = require('../../../shared/middlewares/pagination');
 const permissions = require('../../../shared/middlewares/permissions');
-const HttpError = require('../../errors');
+const HttpError = require('../../response');
 
 sequelize = db.sequelize;
 
@@ -22,7 +22,7 @@ const NotificationService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_ALL', 'FIND_ALL_NOTIFICATION'])
       if (validatePermission) {
         const Notifications = await Notification.findAll()
-        return Notifications;
+        return new HttpResponse(200, Notifications);
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
       return err;
@@ -47,7 +47,7 @@ const NotificationService = {
         }
   
         const createNotification = await Notification.create(body);
-        return createNotification;
+        return new HttpResponse(200, 'notificacion creada');
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
       return err;
@@ -71,7 +71,7 @@ const NotificationService = {
           return new HttpError(400, validate.error);
         }
         const getNotification = await Notification.findByPk(id)
-        return getNotification;
+        return new HttpResponse(200, getNotification);
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
       return err;
@@ -98,7 +98,7 @@ const NotificationService = {
         
         await getNotification.destroy()
 
-        return getNotification;
+        return new HttpResponse(200, 'notificacion eliminada');
         
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
@@ -113,7 +113,7 @@ const NotificationService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_NOTIFICATION'])
       if (validatePermission) {
         const Notifications = await Pagination('Notifications',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return Notifications
+        return new HttpResponse(200, Notifications);
       } 
       const err = new HttpError(401, 'no tienes permisos para esta acción');
       return err;

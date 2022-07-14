@@ -6,7 +6,7 @@ const Pagination = require('../../shared/middlewares/pagination')
 const permissions = require('../../shared/middlewares/permissions');
 const { UUIDV4 } = require('sequelize');
 const Node = require('../node/model');
-const HttpError = require('../../shared/errors');
+const HttpResponse = require('../../shared/response');
 
 sequelize = db.sequelize;
 
@@ -27,10 +27,10 @@ const CostCenterService = {
         const CostCenters = await CostCenter.findAll()
         return CostCenters;
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
-      return err;
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
+      return new HttpResponse(200, err);
     } catch(error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -46,13 +46,13 @@ const CostCenterService = {
       if (validatePermission) {
         const validate = CostCenterValidation.createCostCenter(body);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
 
         const LicenseCostCenter = await License.findByPk(body.LicenseId);
 
         if (!LicenseCostCenter) {
-          return new HttpError(400, "licencia invalida...");
+          return new HttpResponse(400, "licencia invalida...");
         }
 
         const CostCentersLicense = await CostCenter.findOne({
@@ -63,7 +63,7 @@ const CostCenterService = {
 
 
         if (LicenseCostCenter.type == 'SERVER' && CostCentersLicense) {
-          return new HttpError(400, 'tu licencia es tipo servidor por ende solo puede tener un centro de costo.');
+          return new HttpResponse(400, 'tu licencia es tipo servidor por ende solo puede tener un centro de costo.');
         }
   
         const createCostCenter = await CostCenter.create({
@@ -79,13 +79,13 @@ const CostCenterService = {
           isActive: body.isActive ,
         });
 
-        return createCostCenter;
+        return new HttpResponse(201, 'cost center creado');
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
       
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -100,15 +100,15 @@ const CostCenterService = {
       if (validatePermission) {
         const validate = CostCenterValidation.getCostCenter(id);
         if (validate.error) {
-          return new HttpError(400, validate.error);
+          return new HttpResponse(400, validate.error);
         }
         const getCostCenter = await CostCenter.findByPk(id)
-        return getCostCenter;
+        return new HttpResponse(200, getCostCenter);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
   /**
@@ -123,20 +123,20 @@ const CostCenterService = {
         const validate = await CostCenterValidation.getCostCenter(id)
 
         if (validate.error) {
-          return new HttpError(validate.error)
+          return new HttpResponse(validate.error)
         }
 
         const getCostCenter = await CostCenter.findByPk(id);
         
         await getCostCenter.destroy()
 
-        return getCostCenter;
+        return new HttpResponse(200, 'centro de costo eliminado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -154,7 +154,7 @@ const CostCenterService = {
           const validate = await CostCenterValidation.getCostCenter(id)
     
           if (validate.error) {
-            return new HttpError(400, validate.error);
+            return new HttpResponse(400, validate.error);
           }
           const newCostCenter = await CostCenter.update(
             {
@@ -163,12 +163,12 @@ const CostCenterService = {
             {where: {id}}
           )
     
-          return newCostCenter;
+          return new HttpResponse(200, 'centro de costo activado');
         } 
-        const err = new HttpError(401, 'no tienes permisos para esta acción');
+        const err = new HttpResponse(401, 'no tienes permisos para esta acción');
         return err;
       } catch (error) {
-        return new HttpError(400, error.message);
+        return new HttpResponse(400, error.message);
       }
     },
 
@@ -186,7 +186,7 @@ const CostCenterService = {
         const validateid = await CostCenterValidation.getCostCenter(id);
         
         if (validateid.error) {
-          return new HttpError(400, validateid.message);
+          return new HttpResponse(400, validateid.message);
         }
   
         const newCostCenter = await CostCenter.update(
@@ -203,13 +203,13 @@ const CostCenterService = {
           {where: {id}}
         )
   
-        return newCostCenter;
+        return new HttpResponse(200, 'centro de costo actualizado');
         
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 
@@ -218,12 +218,12 @@ const CostCenterService = {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_COST_CENTER'])
       if (validatePermission) {
         const CostCenters = await Pagination('CostCenters',sequelize,sizeAsNumber, pageAsNumber, wherecond)
-        return CostCenters
+        return new HttpResponse(200, CostCenters);
       } 
-      const err = new HttpError(401, 'no tienes permisos para esta acción');
+      const err = new HttpResponse(401, 'no tienes permisos para esta acción');
       return err;
     } catch (error) {
-      return new HttpError(400, error.message);
+      return new HttpResponse(400, error.message);
     }
   },
 }
