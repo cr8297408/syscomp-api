@@ -227,6 +227,7 @@ const UserService = {
     try {
       const validatePermission = await permissions(bearerHeader, ['FIND_PAGINATION', 'FIND_PAGINATION_USER'])
       if (validatePermission) {
+        // let query = `SELECT * FROM users WHERE username = ${wherecond}`
         const Users = await Pagination('users',sequelize,sizeAsNumber, pageAsNumber, wherecond)
         return new HttpResponse(200, Users);
       } 
