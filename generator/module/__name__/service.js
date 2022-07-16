@@ -4,6 +4,7 @@ const __name__ = require('./model');
 const Pagination = require('../../shared/middlewares/pagination')
 const permissions = require('../../shared/middlewares/permissions');
 const HttpResponse = require('../../shared/response');
+const getUser = require('../../shared/middlewares/getUser');
 
 sequelize = db.sequelize;
 
@@ -46,18 +47,21 @@ const __name__Service = {
           console.log(new HttpResponse(400, validate.error));
           return new HttpResponse(400, validate.error);
         }
-  
+        const user = await getUser(bearerHeader);
+
+        const exists__name__ = await __name__.findOne({
+          where: {
+            name: body.name
+          }
+        })
+        if(exists__name__){
+          return new HttpResponse(400, `el nombre ${body.name} ya está en uso`)
+        }
+
         const create__name__ = await __name__.create({
-          businessName: body.businessName,
-          nit: body.nit,
-          email: body.email,
-          repLegalContact: body.repLegalContact,
-          phoneNumber: body.phoneNumber,
-          municipality: body.municipality,
-          department: body.department,
-          country: body.country,
-          contactDate: body.contactDate,
-          direction : body.direction,
+          name: body.name,
+          description: body.description,
+          createdBy: user.id
         });
         return new HttpResponse(201, 'usuario creado');
       } 
@@ -139,17 +143,21 @@ const __name__Service = {
         if (validateid.error) {
           return new HttpResponse(400, validateid.error)
         }
-  
+        
+        const exists__name__ = await __name__.findOne({
+          where: {
+            name: body.name
+          }
+        })
+        if(exists__name__){
+          return new HttpResponse(400, 'el nombre de __name__ ya está en uso')
+        }
+
         const new__name__ = await __name__.update(
           {
-            businessName: body.businessName,
-            repLegalContact: body.repLegalContact,
-            phoneNumber: body.phoneNumber,
-            municipality: body.municipality,
-            department: body.department,
-            country: body.country,
-            contactDate: body.contactDate,
-            direction : body.direction,
+            name: body.name,
+            description: body.description,
+            updatedBy: user.id
           },
           {where: {id}}
         )
